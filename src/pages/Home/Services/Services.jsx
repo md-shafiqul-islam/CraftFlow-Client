@@ -87,7 +87,7 @@ const Services = () => {
           {services.map((service) => (
             <div
               key={service.id}
-              className="bg-base-100 p-6 rounded-xl shadow-md hover:shadow-xl transition-all"
+              className="bg-base-100 p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden"
             >
               <div className="flex flex-col items-start">
                 {service.icon}
