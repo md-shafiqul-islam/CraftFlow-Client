@@ -10,23 +10,25 @@
   name: "light";
   default: true;
 
-  --color-primary: #3b82f6; /* Blue-500: Sleek and actionable */
-  --color-secondary: #6366f1; /* Indigo-500: Elegant, balanced */
-  --color-accent: #f472b6; /* Pink-400: Fresh and eye-catching */
-  --text-accent: #1e293b; /* Slate-800: Sharp and readable */
-  --color-base-200: #f1f5f9; /* Slate-100: Clean, light base */
-  --color-base-300: #e0e7ff; /* Indigo-100: Soft accent container */
+  --color-primary: #1a237e;
+  --color-secondary: #f9a825;
+  --color-accent: #00acc1;
+  --text-accent: #1e293b;
+  --color-base-100: #ffffff;
+  --color-base-200: #f1f5f9;
+  --color-base-300: #e2e8f0;
 }
 
 @plugin "daisyui/theme" {
   name: "dark";
 
-  --color-primary: #60a5fa; /* Blue-400: Clear highlight */
-  --color-secondary: #818cf8; /* Indigo-400: Harmonious tone */
-  --color-accent: #f9a8d4; /* Pink-300: Gentle attention */
-  --text-accent: #f8fafc; /* Slate-50: Clear on dark */
-  --color-base-200: #111827; /* Slate-900: Deep background */
-  --color-base-300: #1e293b; /* Slate-800: Container base */
+  --color-primary: #90caf9;
+  --color-secondary: #ffd54f;
+  --color-accent: #26c6da;
+  --text-accent: #f1f5f9;
+  --color-base-100: #0f172a;
+  --color-base-200: #1e293b;
+  --color-base-300: #334155;
 }
 
 * {

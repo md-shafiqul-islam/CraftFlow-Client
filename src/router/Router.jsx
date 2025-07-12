@@ -9,7 +9,7 @@ const router = createBrowserRouter([
     Component: RootLayout,
     children: [
       {
-        index: "home",
+        index: true,
         Component: Home,
       },
       {
