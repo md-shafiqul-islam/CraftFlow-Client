@@ -1,4 +1,5 @@
 import Banner from "../Banner/Banner";
+import OurTeam from "../OurTeam/OurTeam";
 import ProjectsShowcase from "../ProjectsShowcase/ProjectsShowcase";
 import Services from "../Services/Services";
 import Testimonials from "../Testimonials/Testimonials";
@@ -12,6 +13,7 @@ const Home = () => {
       <Testimonials />
       <ProjectsShowcase />
       <WhyChooseUs />
+      <OurTeam />
     </div>
   );
 };
