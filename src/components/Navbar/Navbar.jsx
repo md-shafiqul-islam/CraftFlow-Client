@@ -6,7 +6,6 @@ import CraftFlowLogo from "../CraftFlowLogo/CraftFlowLogo";
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState("light");
-  console.log("Start", theme);
 
   const commonNavItems = [
     { name: "Home", path: "/" },
@@ -28,7 +27,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="bg-base-300/80 shadow-lg backdrop-blur-sm">
+      <nav className="bg-gradient-to-r from-base-200/80 via-base-300/60 to-base-200/40 shadow-lg backdrop-blur-sm">
         <div className="flex items-center justify-between px-4 py-3 max-w-7xl mx-auto">
           {/* Left: Logo + Mobile Toggle */}
           <div className="flex justify-center items-center gap-5">
