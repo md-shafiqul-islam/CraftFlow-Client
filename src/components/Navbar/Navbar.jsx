@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import { useEffect, useState } from "react";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import CraftFlowLogo from "../CraftFlowLogo/CraftFlowLogo";
@@ -72,9 +72,11 @@ const Navbar = () => {
               {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
             </button>
 
-            <button className="btn btn-outline text-primary font-bold">
-              Login
-            </button>
+            <Link to="/login">
+              <button className="btn btn-outline text-primary font-bold">
+                Login
+              </button>
+            </Link>
           </div>
         </div>
       </nav>
