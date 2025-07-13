@@ -62,6 +62,7 @@ const Banner = () => {
               <img
                 src={slide.image}
                 alt={`Slide ${slide.id}`}
+                loading="lazy"
                 className="relative w-full h-full object-cover"
               />
               <div className="absolute inset-0 flex flex-col justify-center items-center bg-gradient-to-r from-black/80 via-black/60 to-black/40">

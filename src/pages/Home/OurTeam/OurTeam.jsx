@@ -56,6 +56,7 @@ const OurTeam = () => {
                 src={member.image}
                 alt={member.name}
                 className="w-24 h-24 mx-auto rounded-full object-cover mb-4 border-4 border-secondary"
+                loading="lazy"
               />
               <h3 className="text-lg font-semibold text-accent mb-1">
                 {member.name}

@@ -72,6 +72,7 @@ const Testimonials = () => {
                   src={t.image}
                   alt={t.name}
                   className="w-16 h-16 mx-auto rounded-full object-cover mb-4"
+                  loading="lazy"
                 />
                 <h4 className="text-accent font-semibold">{t.name}</h4>
                 <p className="text-xs text-text-accent mb-3">{t.role}</p>

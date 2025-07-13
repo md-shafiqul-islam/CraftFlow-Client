@@ -52,11 +52,13 @@ const services = [
       "Professional advice to choose the perfect tones and textures.",
   },
   {
+    id: 7,
     icon: <Lightbulb className={iconClass} />,
     title: "Lighting Solutions",
     description: "Smart and stylish lighting setups that enhance ambiance.",
   },
   {
+    id: 8,
     icon: <Building2 className={iconClass} />,
     title: "Commercial Interior",
     description:
