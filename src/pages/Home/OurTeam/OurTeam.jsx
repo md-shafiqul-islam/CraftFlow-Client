@@ -1,4 +1,4 @@
-import { Briefcase, UserCircle } from "lucide-react";
+import { Briefcase } from "lucide-react";
 
 const iconClass = "text-secondary size-6 mr-2";
 
