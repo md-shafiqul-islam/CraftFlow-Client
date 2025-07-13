@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import SocialLogin from "./SocialLogin";
+import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 const Register = () => {
   const {
@@ -12,12 +14,40 @@ const Register = () => {
     watch,
   } = useForm();
 
+  const { createUser } = useAuth();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
   const handleRegister = (data) => {
-    console.log(data);
-    // TODO: Handle register logic
+    const { email, password } = data;
+
+    createUser(email, password)
+      .then((result) => {
+        console.log(result);
+        Swal.fire({
+          icon: "success",
+          title: "Registration Successful",
+          text: "Your account has been created successfully!",
+          timer: 3000,
+          confirmButtonColor: false,
+        });
+      })
+      .catch((error) => {
+        let message = "Something went wrong.";
+        if (error.code === "auth/email-already-in-use") {
+          message = "This email is already registered.";
+        } else if (error.code === "auth/invalid-email") {
+          message = "Please enter a valid email address.";
+        }
+
+        Swal.fire({
+          icon: "error",
+          title: "Registration Failed",
+          text: message,
+          confirmButtonColor: "#d33",
+        });
+      });
   };
 
   const password = watch("password");
@@ -47,8 +77,10 @@ const Register = () => {
               Name
             </label>
             <input
+              id="name"
               type="text"
               placeholder="Enter your name"
+              autoComplete="username"
               className="input input-bordered input-secondary text-secondary w-full"
               {...register("name", { required: "Name is required" })}
             />
@@ -59,10 +91,14 @@ const Register = () => {
 
           {/* Role */}
           <div>
-            <label className="block mb-1 font-medium text-sm text-accent">
+            <label
+              className="block mb-1 font-medium text-sm text-accent"
+              htmlFor="role"
+            >
               Role
             </label>
             <select
+              id="role"
               {...register("role", { required: "Role is required" })}
               className="select select-bordered select-secondary text-secondary w-full"
               defaultValue=""
@@ -80,10 +116,14 @@ const Register = () => {
 
           {/* Designation */}
           <div>
-            <label className="block mb-1 font-medium text-sm text-accent">
+            <label
+              className="block mb-1 font-medium text-sm text-accent"
+              htmlFor="designation"
+            >
               Designation
             </label>
             <input
+              id="designation"
               type="text"
               placeholder="Interior Designer, Site Engineer, Electrician, etc."
               className="input input-bordered input-secondary text-secondary w-full"
@@ -100,10 +140,14 @@ const Register = () => {
 
           {/* Bank Account No */}
           <div>
-            <label className="block mb-1 font-medium text-sm text-accent">
+            <label
+              className="block mb-1 font-medium text-sm text-accent"
+              htmlFor="bank_account_no"
+            >
               Bank Account No
             </label>
             <input
+              id="bank_account_no"
               type="text"
               placeholder="Enter your bank account number"
               className="input input-bordered input-secondary text-secondary w-full"
@@ -120,10 +164,14 @@ const Register = () => {
 
           {/* Salary */}
           <div>
-            <label className="block mb-1 font-medium text-sm text-accent">
+            <label
+              className="block mb-1 font-medium text-sm text-accent"
+              htmlFor="salary"
+            >
               Salary
             </label>
             <input
+              id="salary"
               type="number"
               placeholder="Enter your salary"
               className="input input-bordered input-secondary text-secondary w-full"
@@ -151,8 +199,10 @@ const Register = () => {
               Email
             </label>
             <input
+              id="email"
               type="email"
               placeholder="Enter your email"
+              autoComplete="email"
               className="input input-bordered input-secondary text-secondary w-full"
               {...register("email", { required: "Email is required" })}
             />
@@ -173,8 +223,10 @@ const Register = () => {
             </label>
             <div className="relative">
               <input
+                id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
+                autoComplete="current-password"
                 className="input input-bordered input-secondary text-secondary w-full"
                 {...register("password", {
                   required: "Password is required",
@@ -213,8 +265,10 @@ const Register = () => {
             </label>
             <div className="relative">
               <input
+                id="confirmPassword"
                 type={showConfirm ? "text" : "password"}
                 placeholder="Confirm your password"
+                autoComplete="new-password"
                 className="input input-bordered input-secondary text-secondary w-full"
                 {...register("confirmPassword", {
                   required: "Confirm Password is required",
@@ -238,10 +292,14 @@ const Register = () => {
 
           {/* Photo Upload */}
           <div>
-            <label className="block mb-1 font-medium text-sm text-accent">
+            <label
+              className="block mb-1 font-medium text-sm text-accent"
+              htmlFor="photo"
+            >
               Photo
             </label>
             <input
+              id="photo"
               type="file"
               accept="image/*"
               className="file-input file-input-bordered w-full"
