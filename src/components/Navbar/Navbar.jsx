@@ -2,10 +2,13 @@ import { Link, NavLink } from "react-router";
 import { useEffect, useState } from "react";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import CraftFlowLogo from "../CraftFlowLogo/CraftFlowLogo";
+import useAuth from "../../hooks/useAuth";
+import UserMenu from "../UserMenu/UserMenu";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState("light");
+  const { user } = useAuth();
 
   const commonNavItems = [
     { name: "Home", path: "/" },
@@ -72,24 +75,35 @@ const Navbar = () => {
               {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
             </button>
 
-            <Link to="/login">
-              <button className="btn btn-outline text-primary font-bold">
-                Login
-              </button>
-            </Link>
+            {user ? (
+              <UserMenu />
+            ) : (
+              <>
+                <Link to="/login">
+                  <button className="btn btn-outline text-primary font-bold">
+                    Login
+                  </button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </nav>
 
       {/* Mobile Menu Drawer */}
       {menuOpen && (
-        <div className="absolute inset-0" onClick={() => setMenuOpen(false)}>
-          <div className="mt-16 bg-base-300 w-fit rounded-r-xl shadow-lg p-5">
+        <div className="fixed inset-0 z-50">
+          <div
+            className="absolute inset-0"
+            onClick={() => setMenuOpen(false)}
+          />
+          <div className="absolute mt-16 bg-base-300 w-fit rounded-r-xl shadow-lg p-5">
             <ul className="flex flex-col gap-3">
               {commonNavItems.map((item) => (
                 <li key={item.name}>
                   <NavLink
                     to={item.path}
+                    onClick={() => setMenuOpen(false)}
                     className={({ isActive }) =>
                       `flex px-3 py-2 rounded-md font-semibold transition-colors ${
                         isActive

@@ -29,7 +29,7 @@ const Register = () => {
           icon: "success",
           title: "Registration Successful",
           text: "Your account has been created successfully!",
-          timer: 3000,
+          timer: 1500,
           showConfirmButton: false,
         });
         navigate("/");

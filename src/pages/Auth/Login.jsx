@@ -26,7 +26,7 @@ const Login = () => {
           icon: "success",
           title: "Login Successful",
           text: "You have logged in successfully!",
-          timer: 3000,
+          timer: 1500,
           showConfirmButton: false,
         });
         navigate("/");
