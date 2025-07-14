@@ -1,7 +1,7 @@
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import SocialLogin from "./SocialLogin";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
@@ -15,7 +15,7 @@ const Register = () => {
   } = useForm();
 
   const { createUser } = useAuth();
-
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -30,8 +30,9 @@ const Register = () => {
           title: "Registration Successful",
           text: "Your account has been created successfully!",
           timer: 3000,
-          confirmButtonColor: false,
+          showConfirmButton: false,
         });
+        navigate("/");
       })
       .catch((error) => {
         let message = "Something went wrong.";
@@ -39,6 +40,8 @@ const Register = () => {
           message = "This email is already registered.";
         } else if (error.code === "auth/invalid-email") {
           message = "Please enter a valid email address.";
+        } else {
+          message = error.message || message;
         }
 
         Swal.fire({
@@ -330,7 +333,7 @@ const Register = () => {
         </p>
 
         {/* SocialLogin */}
-        <SocialLogin />
+        <SocialLogin from="register" />
       </div>
     </section>
   );

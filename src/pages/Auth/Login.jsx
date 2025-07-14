@@ -1,8 +1,10 @@
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import SocialLogin from "./SocialLogin";
+import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const {
@@ -11,11 +13,41 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
+  const { loginUser } = useAuth();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = (data) => {
-    console.log(data);
-    // TODO: Handle login logic
+    const { email, password } = data;
+
+    loginUser(email, password)
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful",
+          text: "You have logged in successfully!",
+          timer: 3000,
+          showConfirmButton: false,
+        });
+        navigate("/");
+      })
+      .catch((error) => {
+        let message = "Something went wrong. Please try again.";
+        if (error.code === "auth/invalid-credential") {
+          message = "Incorrect email or password.";
+        } else if (error.code === "auth/invalid-email") {
+          message = "Please enter a valid email address.";
+        } else {
+          message = error.message || message;
+        }
+
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: message,
+          confirmButtonColor: "#d33",
+        });
+      });
   };
 
   return (
@@ -41,8 +73,10 @@ const Login = () => {
               Email
             </label>
             <input
+              id="email"
               type="email"
               placeholder="Enter your email"
+              autoComplete="username"
               className="input input-bordered input-secondary text-secondary w-full"
               {...register("email", { required: "Email is required" })}
             />
@@ -63,8 +97,10 @@ const Login = () => {
             </label>
             <div className="relative">
               <input
+                id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
+                autoComplete="current-password"
                 className="input input-bordered input-secondary text-secondary w-full"
                 {...register("password", {
                   required: "Password is required",
@@ -110,7 +146,7 @@ const Login = () => {
         </p>
 
         {/* SocialLogin */}
-        <SocialLogin />
+        <SocialLogin from="login" />
       </div>
     </section>
   );
