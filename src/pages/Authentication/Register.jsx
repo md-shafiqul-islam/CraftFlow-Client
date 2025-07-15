@@ -1,10 +1,12 @@
-import { Eye, EyeOff } from "lucide-react";
+import axios from "axios";
+import Swal from "sweetalert2";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import toast from "react-hot-toast";
 import SocialLogin from "./SocialLogin";
 import useAuth from "../../hooks/useAuth";
-import Swal from "sweetalert2";
+import { useForm } from "react-hook-form";
+import { Eye, EyeOff } from "lucide-react";
+import { Link, useNavigate } from "react-router";
 
 const Register = () => {
   const {
@@ -14,43 +16,100 @@ const Register = () => {
     watch,
   } = useForm();
 
-  const { createUser } = useAuth();
   const navigate = useNavigate();
+  const { createUser, updateUserProfile } = useAuth();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [userPhoto, setUserPhoto] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleRegister = (data) => {
-    const { email, password } = data;
+  const handleUploadImage = async (e) => {
+    const imageFile = e.target.files[0];
+    if (!imageFile) return;
 
-    createUser(email, password)
-      .then((result) => {
-        console.log(result);
-        Swal.fire({
-          icon: "success",
-          title: "Registration Successful",
-          text: "Your account has been created successfully!",
-          timer: 1500,
-          showConfirmButton: false,
-        });
-        navigate("/");
-      })
-      .catch((error) => {
-        let message = "Something went wrong.";
-        if (error.code === "auth/email-already-in-use") {
-          message = "This email is already registered.";
-        } else if (error.code === "auth/invalid-email") {
-          message = "Please enter a valid email address.";
-        } else {
-          message = error.message || message;
-        }
+    setIsUploading(true);
+    const imageData = new FormData();
+    imageData.append("image", imageFile);
 
-        Swal.fire({
-          icon: "error",
-          title: "Registration Failed",
-          text: message,
-          confirmButtonColor: "#d33",
-        });
+    const toastId = toast.loading("Uploading image...");
+
+    try {
+      const uploadUrl = `https://api.imgbb.com/1/upload?key=${
+        import.meta.env.VITE_image_key
+      }`;
+      const response = await axios.post(uploadUrl, imageData);
+      const uploadedImageUrl = response?.data?.data?.url;
+
+      if (!uploadedImageUrl) {
+        throw new Error("Image URL missing from response.");
+      }
+
+      setUserPhoto(uploadedImageUrl);
+      toast.success("Image uploaded successfully!", { id: toastId });
+    } catch {
+      toast.error("Image upload failed. Please try again.", { id: toastId });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleRegister = async (data) => {
+    const { name, email, password } = data;
+
+    if (isUploading) {
+      toast("Please wait, image is still uploading...", {
+        icon: "⏳",
+        duration: 3000,
       });
+      return;
+    }
+
+    if (!userPhoto) {
+      toast.error("Please upload a photo before registering.");
+      return;
+    }
+
+    setIsLoading(true);
+    const userCreationToast = toast.loading("Creating account...");
+
+    try {
+      await createUser(email, password);
+
+      // Update user profile
+      const profileInfo = { displayName: name, photoURL: userPhoto };
+      await updateUserProfile(profileInfo);
+
+      // TODO: Save user info in database
+      toast.dismiss(userCreationToast);
+      Swal.fire({
+        icon: "success",
+        title: "Registration Successful",
+        text: "Your account and profile has been created successfully!",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+      navigate("/");
+    } catch (error) {
+      toast.dismiss(userCreationToast);
+
+      const errorMap = {
+        "auth/email-already-in-use": "This email is already registered.",
+        "auth/invalid-email": "Please enter a valid email address.",
+      };
+      const message =
+        errorMap[error.code] || error.message || "Something went wrong.";
+
+      Swal.fire({
+        icon: "error",
+        title: "Registration Failed",
+        text: message,
+        confirmButtonColor: "#d33",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const password = watch("password");
@@ -305,8 +364,9 @@ const Register = () => {
               id="photo"
               type="file"
               accept="image/*"
+              onChange={handleUploadImage}
+              placeholder="Upload Your Image"
               className="file-input file-input-bordered w-full"
-              {...register("photo", { required: "Photo is required" })}
             />
             {errors.photo && (
               <p className="text-sm text-red-500 mt-1">
@@ -319,8 +379,13 @@ const Register = () => {
           <button
             type="submit"
             className="btn btn-primary text-secondary w-full"
+            disabled={isLoading}
           >
-            Register
+            {isLoading ? (
+              <span className="loading loading-spinner text-secondary"></span>
+            ) : (
+              "Register"
+            )}
           </button>
         </form>
 

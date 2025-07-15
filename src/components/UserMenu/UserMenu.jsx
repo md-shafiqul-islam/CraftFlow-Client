@@ -5,13 +5,14 @@ import { useState, useRef, useEffect } from "react";
 import { LogOut, User, LayoutDashboard } from "lucide-react";
 
 const UserMenu = () => {
-  const { user, logoutUser } = useAuth();
-  const [open, setOpen] = useState(false);
   const dropdownRef = useRef();
   const navigate = useNavigate();
+  const { user, logoutUser } = useAuth();
 
-  const handleLogout = () => {
-    Swal.fire({
+  const [open, setOpen] = useState(false);
+
+  const handleLogout = async () => {
+    const result = await Swal.fire({
       title: "Are you sure?",
       text: "Do you really want to logout?",
       icon: "warning",
@@ -20,30 +21,28 @@ const UserMenu = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, logout!",
       cancelButtonText: "Cancel",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        logoutUser()
-          .then(() => {
-            Swal.fire({
-              title: "Logged out!",
-              text: "You have been logged out.",
-              icon: "success",
-              timer: 1500,
-              showConfirmButton: false,
-            });
-            navigate("/login");
-          })
-          .catch(() => {
-            Swal.fire({
-              title: "Error",
-              text: "Logout failed. Please try again.",
-              icon: "error",
-              confirmButtonText: "OK",
-              confirmButtonColor: "#d33",
-            });
-          });
-      }
     });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      await logoutUser();
+      Swal.fire({
+        icon: "success",
+        title: "Logged Out",
+        text: "You have been logged out successfully.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+      navigate("/login");
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Logout Failed",
+        text: error?.message || "Something went wrong. Please try again.",
+        confirmButtonColor: "#d33",
+      });
+    }
   };
 
   // Close dropdown on outside click
@@ -68,11 +67,13 @@ const UserMenu = () => {
         className="w-10 h-10 rounded-full border-2 border-secondary cursor-pointer"
         onClick={() => setOpen(!open)}
         title="Account Menu"
+        role="button"
+        aria-label="Toggle user menu"
       />
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute right-0 mt-3 w-64 bg-base-100 shadow-lg border border-base-300 rounded-xl z-50 p-4 text-sm space-y-3">
+        <div className="absolute right-0 mt-3 w-64 bg-base-300 shadow-lg border border-base-300 rounded-xl z-50 p-4 text-sm space-y-3">
           {/* User Info */}
           <div className="flex items-center gap-3 border-b pb-3">
             <img
@@ -122,7 +123,8 @@ const UserMenu = () => {
               setOpen(false);
               handleLogout();
             }}
-            className="flex items-center gap-2 px-3 py-2 text-red-600 hover:bg-base-200 rounded-md w-full transition"
+            type="button"
+            className="flex items-center gap-2 px-3 py-2 text-red-600 hover:bg-base-100 rounded-md w-full transition cursor-pointer"
           >
             <LogOut size={16} />
             Logout

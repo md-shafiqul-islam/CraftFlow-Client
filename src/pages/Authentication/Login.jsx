@@ -1,10 +1,11 @@
-import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
-import SocialLogin from "./SocialLogin";
-import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import SocialLogin from "./SocialLogin";
+import { useForm } from "react-hook-form";
+import useAuth from "../../hooks/useAuth";
+import { Eye, EyeOff } from "lucide-react";
+import { Link, useNavigate } from "react-router";
 
 const Login = () => {
   const {
@@ -13,41 +14,50 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const { loginUser } = useAuth();
   const navigate = useNavigate();
+  const { loginUser } = useAuth();
+
+  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = (data) => {
+  const handleLogin = async (data) => {
     const { email, password } = data;
 
-    loginUser(email, password)
-      .then(() => {
-        Swal.fire({
-          icon: "success",
-          title: "Login Successful",
-          text: "You have logged in successfully!",
-          timer: 1500,
-          showConfirmButton: false,
-        });
-        navigate("/");
-      })
-      .catch((error) => {
-        let message = "Something went wrong. Please try again.";
-        if (error.code === "auth/invalid-credential") {
-          message = "Incorrect email or password.";
-        } else if (error.code === "auth/invalid-email") {
-          message = "Please enter a valid email address.";
-        } else {
-          message = error.message || message;
-        }
+    setIsLoading(true);
+    const toastId = toast.loading("Logging in...");
 
-        Swal.fire({
-          icon: "error",
-          title: "Login Failed",
-          text: message,
-          confirmButtonColor: "#d33",
-        });
+    try {
+      await loginUser(email, password);
+      toast.dismiss(toastId);
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful",
+        text: "You have logged in successfully!",
+        timer: 1500,
+        showConfirmButton: false,
       });
+      navigate("/");
+    } catch (error) {
+      toast.dismiss(toastId);
+
+      const errorMap = {
+        "auth/invalid-credential": "Incorrect email or password.",
+        "auth/invalid-email": "Please enter a valid email address.",
+      };
+      const message =
+        errorMap[error.code] ||
+        error.message ||
+        "Something went wrong. Please try again.";
+
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: message,
+        confirmButtonColor: "#d33",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -125,8 +135,13 @@ const Login = () => {
           <button
             type="submit"
             className="btn btn-primary text-secondary w-full"
+            disabled={isLoading}
           >
-            Login
+            {isLoading ? (
+              <span className="loading loading-spinner text-secondary"></span>
+            ) : (
+              "Login"
+            )}
           </button>
         </form>
 
