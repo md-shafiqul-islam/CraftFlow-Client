@@ -7,6 +7,7 @@ import useAuth from "../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router";
+import useAxios from "../../hooks/useAxios";
 
 const Register = () => {
   const {
@@ -17,8 +18,8 @@ const Register = () => {
   } = useForm();
 
   const navigate = useNavigate();
+  const axiosInstance = useAxios();
   const { createUser, updateUserProfile } = useAuth();
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [userPhoto, setUserPhoto] = useState("");
@@ -56,7 +57,15 @@ const Register = () => {
   };
 
   const handleRegister = async (data) => {
-    const { name, email, password } = data;
+    const {
+      name,
+      email,
+      password,
+      role,
+      designation,
+      bank_account_no,
+      salary,
+    } = data;
 
     if (isUploading) {
       toast("Please wait, image is still uploading...", {
@@ -81,13 +90,24 @@ const Register = () => {
       const profileInfo = { displayName: name, photoURL: userPhoto };
       await updateUserProfile(profileInfo);
 
-      // TODO: Save user info in database
+      // Save user info in database
+      const userInfo = {
+        name,
+        email,
+        role,
+        designation,
+        bank_account_no,
+        salary,
+        photo: userPhoto,
+      };
+      await axiosInstance.post("/users", userInfo);
+
       toast.dismiss(userCreationToast);
       Swal.fire({
         icon: "success",
         title: "Registration Successful",
         text: "Your account and profile has been created successfully!",
-        timer: 1500,
+        timer: 2000,
         showConfirmButton: false,
       });
       navigate("/");
@@ -187,7 +207,7 @@ const Register = () => {
             <input
               id="designation"
               type="text"
-              placeholder="Interior Designer, Site Engineer, Electrician, etc."
+              placeholder="Interior Designer, Site Engineer, HR Manager, etc."
               className="input input-bordered input-secondary text-secondary w-full"
               {...register("designation", {
                 required: "Designation is required",
@@ -368,11 +388,6 @@ const Register = () => {
               placeholder="Upload Your Image"
               className="file-input file-input-bordered w-full"
             />
-            {errors.photo && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.photo.message}
-              </p>
-            )}
           </div>
 
           {/* Submit Button */}
@@ -398,7 +413,7 @@ const Register = () => {
         </p>
 
         {/* SocialLogin */}
-        <SocialLogin from="register" />
+        <SocialLogin />
       </div>
     </section>
   );

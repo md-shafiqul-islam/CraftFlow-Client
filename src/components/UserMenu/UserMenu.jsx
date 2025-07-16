@@ -3,13 +3,27 @@ import useAuth from "../../hooks/useAuth";
 import { Link, useNavigate } from "react-router";
 import { useState, useRef, useEffect } from "react";
 import { LogOut, User, LayoutDashboard } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const UserMenu = () => {
   const dropdownRef = useRef();
   const navigate = useNavigate();
   const { user, logoutUser } = useAuth();
-
   const [open, setOpen] = useState(false);
+  const axiosSecure = useAxiosSecure();
+
+  const { data: userInfo } = useQuery({
+    queryKey: ["user", user.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users?email=${user.email}`);
+      return res.data;
+    },
+    onError: (error) => {
+      console.error("Failed to fetch user info:", error);
+    },
+  });
 
   const handleLogout = async () => {
     const result = await Swal.fire({
@@ -31,7 +45,7 @@ const UserMenu = () => {
         icon: "success",
         title: "Logged Out",
         text: "You have been logged out successfully.",
-        timer: 1500,
+        timer: 2000,
         showConfirmButton: false,
       });
       navigate("/login");
@@ -86,9 +100,9 @@ const UserMenu = () => {
                 {user.displayName || "User Name"}
               </p>
               <p className="text-xs text-text-accent truncate">{user.email}</p>
-              {user.role && (
+              {userInfo.role && (
                 <span className="text-[10px] bg-secondary text-white px-2 py-0.5 rounded mt-1 inline-block">
-                  {user.role}
+                  {userInfo.role}
                 </span>
               )}
             </div>

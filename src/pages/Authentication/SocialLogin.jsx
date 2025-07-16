@@ -4,11 +4,14 @@ import { FcGoogle } from "react-icons/fc";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router";
 import { useState } from "react";
+import useAxios from "../../hooks/useAxios";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
-const SocialLogin = ({ from }) => {
+const SocialLogin = () => {
   const navigate = useNavigate();
+  const axiosInstance = useAxios();
+  const axiosSecure = useAxiosSecure();
   const { loginWithGoogle } = useAuth();
-
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGoogleLogin = async () => {
@@ -19,15 +22,28 @@ const SocialLogin = ({ from }) => {
       const result = await loginWithGoogle();
       const user = result.user;
 
-      toast.dismiss(toastId);
-      if (from === "register") {
-        // TODO: Save user info in database
+      const { data: existingUser } = await axiosSecure.get(
+        `/users?email=${user?.email}`
+      );
+
+      if (!existingUser?.email) {
+        // Save user info in database
+        const userInfo = {
+          name: user?.displayName,
+          email: user?.email,
+          role: "Employee",
+          designation: "N/A",
+          bank_account_no: "N/A",
+          salary: 0,
+          photo: user?.photoURL,
+        };
+        await axiosInstance.post("/users", userInfo);
 
         Swal.fire({
           icon: "success",
           title: "Registration Successful",
           text: `Welcome, ${user.displayName || "User"}!`,
-          timer: 1500,
+          timer: 2000,
           showConfirmButton: false,
         });
       } else {
@@ -35,10 +51,11 @@ const SocialLogin = ({ from }) => {
           icon: "success",
           title: "Login Successful",
           text: `Welcome back, ${user.displayName || "User"}!`,
-          timer: 1500,
+          timer: 2000,
           showConfirmButton: false,
         });
       }
+      toast.dismiss(toastId);
       navigate("/");
     } catch (error) {
       toast.dismiss(toastId);

@@ -16,7 +16,6 @@ const Login = () => {
 
   const navigate = useNavigate();
   const { loginUser } = useAuth();
-
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -33,7 +32,7 @@ const Login = () => {
         icon: "success",
         title: "Login Successful",
         text: "You have logged in successfully!",
-        timer: 1500,
+        timer: 2000,
         showConfirmButton: false,
       });
       navigate("/");
@@ -161,7 +160,7 @@ const Login = () => {
         </p>
 
         {/* SocialLogin */}
-        <SocialLogin from="login" />
+        <SocialLogin />
       </div>
     </section>
   );
