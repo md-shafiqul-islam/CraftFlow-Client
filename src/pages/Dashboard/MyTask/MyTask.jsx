@@ -8,6 +8,7 @@ import useAuth from "../../../hooks/useAuth";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
+import Modal from "react-modal";
 
 const MyTask = () => {
   const { register, handleSubmit, reset } = useForm();
@@ -16,6 +17,8 @@ const MyTask = () => {
   const queryClient = useQueryClient();
   const axiosSecure = useAxiosSecure();
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editableTask, setEditableTask] = useState(null);
 
   // Fetch tasks with loading & error states
   const {
@@ -103,6 +106,42 @@ const MyTask = () => {
         deleteTask(id);
       }
     });
+  };
+
+  // Update task mutation
+  const { mutate: updateTask, isLoading: isUpdating } = useMutation({
+    mutationFn: async (updatedTask) => {
+      const response = await axiosSecure.put(
+        `/work-sheet/${editableTask._id}`,
+        updatedTask
+      );
+      return response.data;
+    },
+
+    onSuccess: (data) => {
+      if (data.modifiedCount > 0) {
+        toast.success("Task updated successfully!");
+        setIsModalOpen(false);
+        reset();
+        queryClient.invalidateQueries({ queryKey: ["my-tasks", user?.email] });
+      } else {
+        toast.error("No changes were made.");
+      }
+    },
+
+    onError: () => {
+      toast.error("Failed to update task. Please try again.");
+    },
+  });
+
+  // Handle task update from modal
+  const handleUpdate = (data) => {
+    const updatedTask = {
+      ...data,
+      date: selectedDate.toLocaleDateString("en-CA"),
+    };
+
+    updateTask(updatedTask);
   };
 
   return (
@@ -232,7 +271,16 @@ const MyTask = () => {
                   <td>{task.hours}</td>
                   <td>{new Date(task.date).toLocaleDateString("en-GB")}</td>
                   <td className="flex gap-2 justify-center">
-                    <button className="btn btn-sm btn-accent">
+                    <button
+                      className="btn btn-sm btn-accent"
+                      onClick={() => {
+                        setEditableTask(task);
+                        reset({ task: task.task, hours: task.hours });
+                        setSelectedDate(new Date(task.date));
+                        setIsModalOpen(true);
+                      }}
+                      title="Edit task"
+                    >
                       <Pencil size={16} />
                     </button>
 
@@ -251,6 +299,94 @@ const MyTask = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Edit Task Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel="Edit Task"
+        className="modal-box max-w-lg overflow-visible"
+        overlayClassName="modal modal-open"
+        ariaHideApp={false}
+      >
+        <h3 className="text-lg font-bold mb-4">Edit Task</h3>
+
+        <form onSubmit={handleSubmit(handleUpdate)} className="space-y-4">
+          {/* Task Dropdown */}
+          <div>
+            <label className="label">
+              <span className="label-text">
+                Task <span className="text-red-500">*</span>
+              </span>
+            </label>
+            <select
+              defaultValue={editableTask?.task}
+              className="select select-bordered w-full"
+              {...register("task", { required: true })}
+            >
+              <option value="Site Visit">Site Visit</option>
+              <option value="Client Consultation">Client Consultation</option>
+              <option value="3D Design Rendering">3D Design Rendering</option>
+              <option value="Material Selection">Material Selection</option>
+              <option value="Furniture Procurement">
+                Furniture Procurement
+              </option>
+              <option value="Lighting Design">Lighting Design</option>
+              <option value="On-site Supervision">On-site Supervision</option>
+            </select>
+          </div>
+
+          {/* Hours Input */}
+          <div>
+            <label className="label">
+              <span className="label-text">
+                Hours Worked <span className="text-red-500">*</span>
+              </span>
+            </label>
+            <input
+              type="number"
+              defaultValue={editableTask?.hours}
+              className="input input-bordered w-full"
+              {...register("hours", { required: true, min: 1 })}
+            />
+          </div>
+
+          {/* Date Picker */}
+          <div>
+            <label className="label">
+              <span className="label-text">
+                Date <span className="text-red-500">*</span>
+              </span>
+            </label>
+            <DatePicker
+              selected={selectedDate}
+              onChange={(date) => setSelectedDate(date)}
+              className="input input-bordered w-full"
+              dateFormat="yyyy-MM-dd"
+              required
+            />
+          </div>
+
+          {/* Buttons */}
+          <div className="flex gap-2 pt-2">
+            <button
+              type="submit"
+              className="btn btn-primary flex-1"
+              disabled={isUpdating}
+            >
+              {isUpdating ? "Updating..." : "Update Task"}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(false)}
+              className="btn btn-base-100 flex-1"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </Modal>
     </section>
   );
 };
