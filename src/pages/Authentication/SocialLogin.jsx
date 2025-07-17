@@ -7,6 +7,29 @@ import { useState } from "react";
 import useAxios from "../../hooks/useAxios";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 
+const getRandomDesignation = () => {
+  const roles = [
+    "Interior Designer",
+    "Project Manager",
+    "Site Supervisor",
+    "Draftsman",
+    "3D Visualizer",
+    "Lighting Consultant",
+    "Procurement Officer",
+    "Renovation Specialist",
+    "Furniture Designer",
+    "Client Coordinator",
+  ];
+  return roles[Math.floor(Math.random() * roles.length)];
+};
+
+const generateBankAccountNumber = () => {
+  const randomDigits = Array.from({ length: 9 }, () =>
+    Math.floor(Math.random() * 10)
+  ).join("");
+  return `0009-${randomDigits}`;
+};
+
 const SocialLogin = () => {
   const navigate = useNavigate();
   const axiosInstance = useAxios();
@@ -32,10 +55,11 @@ const SocialLogin = () => {
           name: user?.displayName,
           email: user?.email,
           role: "Employee",
-          designation: "N/A",
-          bank_account_no: "N/A",
-          salary: 0,
+          designation: getRandomDesignation(),
+          bank_account_no: generateBankAccountNumber(),
+          salary: 35000,
           photo: user?.photoURL,
+          isVerified: false,
         };
         await axiosInstance.post("/users", userInfo);
 

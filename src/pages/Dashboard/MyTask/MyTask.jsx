@@ -93,19 +93,19 @@ const MyTask = () => {
   });
 
   // Confirm before delete
-  const handleDelete = (id) => {
-    Swal.fire({
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
       title: "Are you sure?",
       text: "This task will be deleted permanently!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!",
       cancelButtonText: "Cancel",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteTask(id);
-      }
     });
+
+    if (result.isConfirmed) {
+      deleteTask(id);
+    }
   };
 
   // Update task mutation
@@ -146,6 +146,8 @@ const MyTask = () => {
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-10">
+      <h2 className="text-2xl font-semibold mb-6 text-accent">My Tasks</h2>
+
       {/* Instruction */}
       <p className="text-sm mb-2">
         <span className="text-red-500">*</span> indicates required fields
@@ -320,7 +322,6 @@ const MyTask = () => {
               </span>
             </label>
             <select
-              defaultValue={editableTask?.task}
               className="select select-bordered w-full"
               {...register("task", { required: true })}
             >
@@ -345,7 +346,6 @@ const MyTask = () => {
             </label>
             <input
               type="number"
-              defaultValue={editableTask?.hours}
               className="input input-bordered w-full"
               {...register("hours", { required: true, min: 1 })}
             />

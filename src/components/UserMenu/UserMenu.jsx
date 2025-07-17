@@ -78,7 +78,7 @@ const UserMenu = () => {
       <img
         src={user?.photoURL || "https://i.pravatar.cc/100?u=default"}
         alt="User Avatar"
-        className="w-10 h-10 rounded-full border-2 border-secondary cursor-pointer"
+        className="w-10 h-10 rounded-full object-cover border border-secondary cursor-pointer"
         onClick={() => setOpen(!open)}
         title="Account Menu"
         role="button"
@@ -93,7 +93,7 @@ const UserMenu = () => {
             <img
               src={user.photoURL || "https://i.pravatar.cc/100?u=default"}
               alt="User Avatar"
-              className="w-12 h-12 rounded-full border border-secondary"
+              className="w-10 h-10 rounded-full object-cover border border-secondary"
             />
             <div>
               <p className="font-semibold text-accent">
@@ -118,6 +118,7 @@ const UserMenu = () => {
               <LayoutDashboard size={16} />
               Dashboard
             </Link>
+
             <Link
               to="/profile"
               className="flex items-center gap-2 hover:bg-base-200 px-3 py-2 rounded-md transition"

@@ -8,6 +8,7 @@ import Register from "../pages/Authentication/Register";
 import PrivateRoute from "../routes/PrivateRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
 import MyTask from "../pages/Dashboard/MyTask/MyTask";
+import EmployeeList from "../pages/Dashboard/EmployeeList/EmployeeList";
 
 const router = createBrowserRouter([
   // RootLayout
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
       {
         path: "my-task",
         Component: MyTask,
+      },
+      {
+        path: "employee-list",
+        Component: EmployeeList,
       },
     ],
   },

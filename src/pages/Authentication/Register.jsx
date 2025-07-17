@@ -99,6 +99,7 @@ const Register = () => {
         bank_account_no,
         salary,
         photo: userPhoto,
+        isVerified: false,
       };
       await axiosInstance.post("/users", userInfo);
 
@@ -106,7 +107,7 @@ const Register = () => {
       Swal.fire({
         icon: "success",
         title: "Registration Successful",
-        text: "Your account and profile has been created successfully!",
+        text: `Welcome, ${name || "User"}!`,
         timer: 2000,
         showConfirmButton: false,
       });

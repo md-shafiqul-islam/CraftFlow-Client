@@ -1,4 +1,4 @@
-import { FiHome, FiBox, FiArrowLeft } from "react-icons/fi";
+import { FiHome, FiBox, FiArrowLeft, FiUsers } from "react-icons/fi";
 import { MdOutlineDashboard } from "react-icons/md";
 import { NavLink, Outlet } from "react-router";
 import useAuth from "../hooks/useAuth";
@@ -77,6 +77,7 @@ const DashboardLayout = () => {
                   Dashboard
                 </NavLink>
               </li>
+
               <li>
                 <NavLink
                   to="/dashboard/my-task"
@@ -90,6 +91,22 @@ const DashboardLayout = () => {
                 >
                   <FiBox className="text-lg" />
                   My Tasks
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink
+                  to="/dashboard/employee-list"
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 py-2 px-4 rounded-md ${
+                      isActive
+                        ? "bg-secondary text-base-100"
+                        : "hover:bg-base-100"
+                    }`
+                  }
+                >
+                  <FiUsers className="text-lg" />
+                  Employee List
                 </NavLink>
               </li>
             </ul>
@@ -115,7 +132,7 @@ const DashboardLayout = () => {
               <img
                 src={user.photoURL}
                 alt="user"
-                className="w-10 h-10 rounded-full object-cover border"
+                className="w-10 h-10 rounded-full object-cover border border-secondary"
               />
               <div>
                 <p className="font-medium">{user.displayName}</p>
