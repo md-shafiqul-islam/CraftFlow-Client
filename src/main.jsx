@@ -5,6 +5,7 @@ import { RouterProvider } from "react-router";
 import router from "./router/Router";
 import AuthProvider from "./providers/AuthProvider";
 import { Toaster } from "react-hot-toast";
+import "react-datepicker/dist/react-datepicker.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();

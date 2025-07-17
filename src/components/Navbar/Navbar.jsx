@@ -13,6 +13,7 @@ const Navbar = () => {
   const commonNavItems = [
     { name: "Home", path: "/" },
     { name: "Contact Us", path: "/contact-us" },
+    ...(user ? [{ name: "Dashboard", path: "/dashboard" }] : []),
   ];
 
   useEffect(() => {

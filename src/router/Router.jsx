@@ -5,6 +5,9 @@ import ContactUs from "../pages/ContactUs/ContactUs";
 import AuthLayout from "../layouts/AuthLayout";
 import Login from "../pages/Authentication/Login";
 import Register from "../pages/Authentication/Register";
+import PrivateRoute from "../routes/PrivateRoute";
+import DashboardLayout from "../layouts/DashboardLayout";
+import MyTask from "../pages/Dashboard/MyTask/MyTask";
 
 const router = createBrowserRouter([
   // RootLayout
@@ -35,6 +38,22 @@ const router = createBrowserRouter([
       {
         path: "register",
         Component: Register,
+      },
+    ],
+  },
+
+  // DashboardLayout
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        path: "my-task",
+        Component: MyTask,
       },
     ],
   },
