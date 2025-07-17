@@ -7,16 +7,22 @@ import toast from "react-hot-toast";
 import useAuth from "../../../hooks/useAuth";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
+import Swal from "sweetalert2";
 
 const MyTask = () => {
   const { register, handleSubmit, reset } = useForm();
 
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const axiosSecure = useAxiosSecure();
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const queryClient = useQueryClient();
 
-  const { data: tasks = [] } = useQuery({
+  // Fetch tasks with loading & error states
+  const {
+    data: tasks = [],
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["my-tasks", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
@@ -25,7 +31,8 @@ const MyTask = () => {
     },
   });
 
-  const { mutate: addTask, isPending } = useMutation({
+  // Add task mutation
+  const { mutate: addTask, isLoading: isAdding } = useMutation({
     mutationFn: async (newTask) => {
       const response = await axiosSecure.post("/work-sheet", newTask);
       return response.data;
@@ -36,7 +43,6 @@ const MyTask = () => {
         toast.success("Task added successfully!");
         reset();
         setSelectedDate(new Date());
-
         queryClient.setQueryData(["my-tasks", user?.email], (old = []) => [
           { ...variables, _id: data.insertedId },
           ...old,
@@ -51,6 +57,7 @@ const MyTask = () => {
     },
   });
 
+  // Handle task create
   const handleCreateTask = async (data) => {
     const newTask = {
       ...data,
@@ -61,19 +68,56 @@ const MyTask = () => {
     addTask(newTask);
   };
 
+  // Delete task mutation with loading state
+  const { mutate: deleteTask, isLoading: isDeleting } = useMutation({
+    mutationFn: async (id) => {
+      const response = await axiosSecure.delete(`/work-sheet/${id}`);
+      return response.data;
+    },
+
+    onSuccess: (data) => {
+      if (data?.deletedCount > 0) {
+        toast.success("Deleted successfully!");
+        queryClient.invalidateQueries({ queryKey: ["my-tasks", user?.email] });
+      } else {
+        toast.error("Failed to delete.");
+      }
+    },
+
+    onError: () => {
+      toast.error("Something went wrong while deleting. Please try again.");
+    },
+  });
+
+  // Confirm before delete
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This task will be deleted permanently!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteTask(id);
+      }
+    });
+  };
+
   return (
     <section className="max-w-7xl mx-auto px-4 py-10">
-      {/* Instruction for Required Fields */}
-      <p className="text-sm text-gray-500 mb-2">
+      {/* Instruction */}
+      <p className="text-sm mb-2">
         <span className="text-red-500">*</span> indicates required fields
       </p>
 
-      {/* Form Section */}
+      {/* Form */}
       <form
         onSubmit={handleSubmit(handleCreateTask)}
         className="flex flex-wrap md:flex-nowrap items-end gap-4 mb-10 bg-base-300 p-6 rounded-lg shadow-md"
       >
-        {/* User Email (readonly) */}
+        {/* User Email */}
         <div className="flex flex-col w-full md:w-auto">
           <label className="text-sm font-medium text-accent mb-1">
             Your Email
@@ -141,10 +185,11 @@ const MyTask = () => {
 
         {/* Submit Button */}
         <button
+          type="submit"
           className="btn btn-primary text-white md:mt-0 mt-4 w-full md:w-auto"
-          disabled={isPending}
+          disabled={isAdding}
         >
-          {isPending ? "Adding..." : "Add Task"}
+          {isAdding ? "Adding..." : "Add Task"}
         </button>
       </form>
 
@@ -161,25 +206,42 @@ const MyTask = () => {
             </tr>
           </thead>
           <tbody>
-            {tasks.length === 0 ? (
+            {isError ? (
               <tr>
-                <td colSpan="5" className="text-center text-text-accent py-6">
+                <td colSpan={5} className="text-center text-error py-6">
+                  Failed to load tasks.
+                </td>
+              </tr>
+            ) : isLoading ? (
+              <tr>
+                <td colSpan={5} className="text-center py-20">
+                  <span className="loading loading-spinner text-secondary mx-auto"></span>
+                </td>
+              </tr>
+            ) : tasks.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="text-center text-text-accent py-6">
                   No tasks added yet.
                 </td>
               </tr>
             ) : (
               tasks.map((task, index) => (
-                <tr key={task.id}>
+                <tr key={task._id}>
                   <td>{index + 1}</td>
                   <td>{task.task}</td>
                   <td>{task.hours}</td>
-                  <td>{task.date}</td>
+                  <td>{new Date(task.date).toLocaleDateString("en-GB")}</td>
                   <td className="flex gap-2 justify-center">
                     <button className="btn btn-sm btn-accent">
                       <Pencil size={16} />
                     </button>
 
-                    <button className="btn btn-sm btn-error text-white">
+                    <button
+                      className="btn btn-sm btn-error text-white"
+                      onClick={() => handleDelete(task._id)}
+                      disabled={isDeleting}
+                      title="Delete task"
+                    >
                       <Trash2 size={16} />
                     </button>
                   </td>
