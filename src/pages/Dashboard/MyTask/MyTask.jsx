@@ -11,8 +11,7 @@ import Swal from "sweetalert2";
 import Modal from "react-modal";
 
 const MyTask = () => {
-  const { register, handleSubmit, reset } = useForm();
-
+  // --- Hooks & State ---
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const axiosSecure = useAxiosSecure();
@@ -20,7 +19,9 @@ const MyTask = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editableTask, setEditableTask] = useState(null);
 
-  // Fetch tasks with loading & error states
+  const { register, handleSubmit, reset } = useForm();
+
+  // --- Fetch tasks ---
   const {
     data: tasks = [],
     isLoading,
@@ -34,7 +35,9 @@ const MyTask = () => {
     },
   });
 
-  // Add task mutation
+  // --- Mutations ---
+
+  // Add task
   const { mutate: addTask, isLoading: isAdding } = useMutation({
     mutationFn: async (newTask) => {
       const response = await axiosSecure.post("/work-sheet", newTask);
@@ -46,10 +49,13 @@ const MyTask = () => {
         toast.success("Task added successfully!");
         reset();
         setSelectedDate(new Date());
-        queryClient.setQueryData(["my-tasks", user?.email], (old = []) => [
-          { ...variables, _id: data.insertedId },
-          ...old,
-        ]);
+
+        queryClient.setQueryData(["my-tasks", user?.email], (old = []) => {
+          const newTask = { ...variables, _id: data.insertedId };
+          return [newTask, ...old].sort(
+            (a, b) => new Date(b.date) - new Date(a.date)
+          );
+        });
       } else {
         toast.error("Failed to add task. Try again.");
       }
@@ -60,18 +66,7 @@ const MyTask = () => {
     },
   });
 
-  // Handle task create
-  const handleCreateTask = async (data) => {
-    const newTask = {
-      ...data,
-      created_by: user?.email,
-      date: selectedDate.toLocaleDateString("en-CA"),
-    };
-
-    addTask(newTask);
-  };
-
-  // Delete task mutation with loading state
+  // Delete task
   const { mutate: deleteTask, isLoading: isDeleting } = useMutation({
     mutationFn: async (id) => {
       const response = await axiosSecure.delete(`/work-sheet/${id}`);
@@ -92,23 +87,7 @@ const MyTask = () => {
     },
   });
 
-  // Confirm before delete
-  const handleDelete = async (id) => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "This task will be deleted permanently!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "Cancel",
-    });
-
-    if (result.isConfirmed) {
-      deleteTask(id);
-    }
-  };
-
-  // Update task mutation
+  // Update task
   const { mutate: updateTask, isLoading: isUpdating } = useMutation({
     mutationFn: async (updatedTask) => {
       const response = await axiosSecure.put(
@@ -134,7 +113,36 @@ const MyTask = () => {
     },
   });
 
-  // Handle task update from modal
+  // --- Handlers ---
+
+  // Create task
+  const handleCreateTask = (data) => {
+    const newTask = {
+      ...data,
+      created_by: user?.email,
+      date: selectedDate.toLocaleDateString("en-CA"),
+    };
+
+    addTask(newTask);
+  };
+
+  // Confirm & delete
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This task will be deleted permanently!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+    });
+
+    if (result.isConfirmed) {
+      deleteTask(id);
+    }
+  };
+
+  // Update task
   const handleUpdate = (data) => {
     const updatedTask = {
       ...data,
@@ -277,7 +285,7 @@ const MyTask = () => {
                       className="btn btn-sm btn-accent"
                       onClick={() => {
                         setEditableTask(task);
-                        reset({ task: task.task, hours: task.hours });
+                        reset({ task: task.task, hours: task.hours }); // Pre-fill form fields
                         setSelectedDate(new Date(task.date));
                         setIsModalOpen(true);
                       }}
