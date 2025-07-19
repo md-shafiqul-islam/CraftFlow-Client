@@ -61,7 +61,11 @@ const EmployeeDetails = () => {
   });
 
   if (isLoading) {
-    return <div className="p-10 text-center text-base-content">Loading...</div>;
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <span className="loading loading-spinner text-secondary"></span>
+      </div>
+    );
   }
 
   if (isError || !employee) {
