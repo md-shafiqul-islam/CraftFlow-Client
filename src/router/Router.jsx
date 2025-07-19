@@ -10,6 +10,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import MyTask from "../pages/Dashboard/MyTask/MyTask";
 import EmployeeList from "../pages/Dashboard/EmployeeList/EmployeeList";
 import PaymentHistory from "../pages/Dashboard/PaymentHistory.jsx/PaymentHistory";
+import EmployeeDetails from "../pages/Dashboard/EmployeeDetails/EmployeeDetails";
 
 const router = createBrowserRouter([
   // RootLayout
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
       {
         path: "employee-list",
         Component: EmployeeList,
+      },
+      {
+        path: "employee-details/:employeeId",
+        Component: EmployeeDetails,
       },
     ],
   },

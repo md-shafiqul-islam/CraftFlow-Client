@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import { Elements } from "@stripe/react-stripe-js";
 import PaymentForm from "../Payment/PaymentForm";
 import { loadStripe } from "@stripe/stripe-js";
+import { Link } from "react-router";
 
 const stripePromise = loadStripe(import.meta.env.VITE_payment_key);
 
@@ -125,11 +126,17 @@ const EmployeeList = () => {
       },
       {
         header: "Details",
-        cell: () => (
-          <button className="btn btn-sm btn-secondary text-white">
-            Details
-          </button>
-        ),
+        cell: ({ row }) => {
+          const employee = row.original;
+          return (
+            <Link
+              to={`/dashboard/employee-details/${employee._id}`}
+              className="btn btn-sm btn-secondary text-white"
+            >
+              Details
+            </Link>
+          );
+        },
       },
     ],
     [handleVerification]
