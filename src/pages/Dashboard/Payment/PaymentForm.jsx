@@ -134,7 +134,14 @@ const PaymentForm = ({
           type="text"
           placeholder="Enter month (e.g., July)"
           className="input input-bordered w-full"
-          {...register("month", { required: true })}
+          {...register("month", {
+            required: true,
+            validate: (value) => {
+              const numeric = !isNaN(value) && +value >= 1 && +value <= 12;
+              const textMonth = new Date(`${value} 1, 2025`).getMonth() >= 0;
+              return numeric || textMonth || "Invalid month";
+            },
+          })}
         />
         {errors.month && (
           <p className="text-red-500 text-sm">Month is required</p>
@@ -144,7 +151,13 @@ const PaymentForm = ({
           type="number"
           placeholder="Enter year (e.g., 2025)"
           className="input input-bordered w-full"
-          {...register("year", { required: true })}
+          {...register("year", {
+            required: true,
+            min: { value: 1900, message: "Year must be >= 1900" },
+            max: { value: 2099, message: "Year must be <= 2099" },
+            validate: (value) =>
+              /^\d{4}$/.test(value) || "Must be a 4-digit year",
+          })}
         />
         {errors.year && (
           <p className="text-red-500 text-sm">Year is required</p>

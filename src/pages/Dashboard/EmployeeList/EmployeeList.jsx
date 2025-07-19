@@ -172,7 +172,7 @@ const EmployeeList = () => {
 
       <div className="overflow-x-auto bg-base-100 rounded-lg shadow">
         <table className="table w-full">
-          <thead className="bg-base-300 text-base-content">
+          <thead className="bg-base-300">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (

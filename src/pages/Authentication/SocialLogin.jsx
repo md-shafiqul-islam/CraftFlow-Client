@@ -5,7 +5,6 @@ import useAuth from "../../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router";
 import { useState } from "react";
 import useAxios from "../../hooks/useAxios";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const getRandomDesignation = () => {
   const roles = [
@@ -34,7 +33,6 @@ const SocialLogin = () => {
   const navigate = useNavigate();
   const axiosInstance = useAxios();
   const location = useLocation();
-  const axiosSecure = useAxiosSecure();
   const { loginWithGoogle } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -46,22 +44,19 @@ const SocialLogin = () => {
       const result = await loginWithGoogle();
       const user = result.user;
 
-      const { data: existingUser } = await axiosSecure.get(
-        `/users?email=${user?.email}`
-      );
+      // Save user info in database
+      const userInfo = {
+        name: user?.displayName,
+        email: user?.email,
+        role: "Employee",
+        designation: getRandomDesignation(),
+        bank_account_no: generateBankAccountNumber(),
+        salary: 35000,
+        photo: user?.photoURL,
+        isVerified: false,
+      };
 
-      if (!existingUser?.email) {
-        // Save user info in database
-        const userInfo = {
-          name: user?.displayName,
-          email: user?.email,
-          role: "Employee",
-          designation: getRandomDesignation(),
-          bank_account_no: generateBankAccountNumber(),
-          salary: 35000,
-          photo: user?.photoURL,
-          isVerified: false,
-        };
+      try {
         await axiosInstance.post("/users", userInfo);
 
         Swal.fire({
@@ -71,15 +66,21 @@ const SocialLogin = () => {
           timer: 2000,
           showConfirmButton: false,
         });
-      } else {
-        Swal.fire({
-          icon: "success",
-          title: "Login Successful",
-          text: `Welcome back, ${user.displayName || "User"}!`,
-          timer: 2000,
-          showConfirmButton: false,
-        });
+      } catch (postError) {
+        if (postError.response?.status === 409) {
+          // User already exists - treat as login success
+          Swal.fire({
+            icon: "success",
+            title: "Login Successful",
+            text: `Welcome back, ${user.displayName || "User"}!`,
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        } else {
+          throw postError;
+        }
       }
+
       toast.dismiss(toastId);
       navigate(location?.state || "/");
     } catch (error) {

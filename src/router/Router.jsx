@@ -9,6 +9,7 @@ import PrivateRoute from "../routes/PrivateRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
 import MyTask from "../pages/Dashboard/MyTask/MyTask";
 import EmployeeList from "../pages/Dashboard/EmployeeList/EmployeeList";
+import PaymentHistory from "../pages/Dashboard/PaymentHistory.jsx/PaymentHistory";
 
 const router = createBrowserRouter([
   // RootLayout
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
       {
         path: "my-task",
         Component: MyTask,
+      },
+      {
+        path: "payment-history",
+        Component: PaymentHistory,
       },
       {
         path: "employee-list",
