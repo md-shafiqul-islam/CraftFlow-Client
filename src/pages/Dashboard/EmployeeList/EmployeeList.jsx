@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
 import {
   useReactTable,
@@ -8,21 +8,17 @@ import {
 import { FaTimes } from "react-icons/fa";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
-import { useForm } from "react-hook-form";
+import { Elements } from "@stripe/react-stripe-js";
+import PaymentForm from "../Payment/PaymentForm";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(import.meta.env.VITE_payment_key);
 
 const EmployeeList = () => {
   // --- Hooks & State ---
-  const queryClient = useQueryClient();
   const axiosSecure = useAxiosSecure();
   const [showModal, setShowModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm();
 
   // --- Fetch employees ---
   const {
@@ -32,7 +28,7 @@ const EmployeeList = () => {
   } = useQuery({
     queryKey: ["employees"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/users?role=Employee");
+      const res = await axiosSecure.get("/users?role");
       return res.data;
     },
   });
@@ -57,33 +53,6 @@ const EmployeeList = () => {
     },
   });
 
-  // Submit Payment Request
-  const { mutate: submitPayment } = useMutation({
-    mutationFn: async (paymentData) => {
-      const res = await axiosSecure.post("/payment", paymentData);
-      return res.data;
-    },
-
-    onSuccess: (data) => {
-      if (data?.insertedId) {
-        toast.success("Payment request created!");
-        setShowModal(false);
-        setSelectedEmployee(null);
-        reset();
-
-        queryClient.invalidateQueries(["payments"]);
-      } else {
-        toast.error("Failed to submit payment request. Try again.");
-      }
-    },
-
-    onError: (error) => {
-      const message =
-        error?.response?.data?.message || "Failed to submit payment request.";
-      toast.error(message);
-    },
-  });
-
   // --- Handlers ---
 
   // Handle verification Status
@@ -93,20 +62,6 @@ const EmployeeList = () => {
     },
     [updateVerification]
   );
-
-  // Handle payment form submit
-  const handlePayment = (data) => {
-    const paymentData = {
-      employeeId: selectedEmployee._id,
-      name: selectedEmployee.name,
-      email: selectedEmployee.email,
-      ...data,
-      status: "pending",
-      requestedAt: new Date().toISOString(),
-    };
-
-    submitPayment(paymentData);
-  };
 
   // Table columns
   const columns = useMemo(
@@ -160,11 +115,6 @@ const EmployeeList = () => {
               onClick={() => {
                 setSelectedEmployee(employee);
                 setShowModal(true);
-                reset({
-                  salary: employee.salary,
-                  month: "",
-                  year: "",
-                });
               }}
               disabled={!employee.isVerified}
             >
@@ -182,12 +132,27 @@ const EmployeeList = () => {
         ),
       },
     ],
-    [handleVerification, reset]
+    [handleVerification]
   );
+
+  // Sort Employee
+  const sortedEmployees = useMemo(() => {
+    const rolePriority = {
+      Admin: 0,
+      HR: 1,
+      Employee: 2,
+    };
+
+    return [...employees].sort((a, b) => {
+      const roleA = rolePriority[a.role] ?? 99;
+      const roleB = rolePriority[b.role] ?? 99;
+      return roleA - roleB;
+    });
+  }, [employees]);
 
   // React Table Setup
   const table = useReactTable({
-    data: employees,
+    data: sortedEmployees,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -240,57 +205,13 @@ const EmployeeList = () => {
       {showModal && selectedEmployee && (
         <dialog className="modal modal-open">
           <div className="modal-box">
-            <h3 className="font-bold text-lg mb-4">
-              Pay{" "}
-              <span className="text-secondary">{selectedEmployee.name}</span>
-            </h3>
-
-            <form onSubmit={handleSubmit(handlePayment)} className="space-y-4">
-              <input
-                type="text"
-                readOnly
-                className="input input-bordered w-full cursor-not-allowed"
-                {...register("salary")}
+            <Elements stripe={stripePromise}>
+              <PaymentForm
+                selectedEmployee={selectedEmployee}
+                setShowModal={setShowModal}
+                setSelectedEmployee={setSelectedEmployee}
               />
-
-              <input
-                type="text"
-                placeholder="Enter month (e.g., July)"
-                className="input input-bordered w-full"
-                {...register("month", { required: true })}
-              />
-              {errors.month && (
-                <p className="text-red-500 text-sm">Month is required</p>
-              )}
-
-              <input
-                type="number"
-                placeholder="Enter year (e.g., 2025)"
-                className="input input-bordered w-full"
-                {...register("year", { required: true })}
-              />
-              {errors.year && (
-                <p className="text-red-500 text-sm">Year is required</p>
-              )}
-
-              <div className="modal-action">
-                <button type="submit" className="btn btn-success text-white">
-                  Submit
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowModal(false);
-                    setSelectedEmployee(null);
-                    reset();
-                  }}
-                  className="btn"
-                >
-                  Close
-                </button>
-              </div>
-            </form>
+            </Elements>
           </div>
         </dialog>
       )}

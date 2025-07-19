@@ -6,7 +6,7 @@ import SocialLogin from "./SocialLogin";
 import useAuth from "../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import useAxios from "../../hooks/useAxios";
 
 const Register = () => {
@@ -19,6 +19,7 @@ const Register = () => {
 
   const navigate = useNavigate();
   const axiosInstance = useAxios();
+  const location = useLocation();
   const { createUser, updateUserProfile } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -111,7 +112,7 @@ const Register = () => {
         timer: 2000,
         showConfirmButton: false,
       });
-      navigate("/");
+      navigate(location?.state || "/");
     } catch (error) {
       toast.dismiss(userCreationToast);
 

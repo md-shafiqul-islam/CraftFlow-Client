@@ -5,7 +5,7 @@ import SocialLogin from "./SocialLogin";
 import { useForm } from "react-hook-form";
 import useAuth from "../../hooks/useAuth";
 import { Eye, EyeOff } from "lucide-react";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 
 const Login = () => {
   const {
@@ -16,6 +16,7 @@ const Login = () => {
 
   const navigate = useNavigate();
   const { loginUser } = useAuth();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -35,7 +36,7 @@ const Login = () => {
         timer: 2000,
         showConfirmButton: false,
       });
-      navigate("/");
+      navigate(location?.state || "/");
     } catch (error) {
       toast.dismiss(toastId);
 

@@ -2,7 +2,7 @@ import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 import useAuth from "../../hooks/useAuth";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useState } from "react";
 import useAxios from "../../hooks/useAxios";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
@@ -33,6 +33,7 @@ const generateBankAccountNumber = () => {
 const SocialLogin = () => {
   const navigate = useNavigate();
   const axiosInstance = useAxios();
+  const location = useLocation();
   const axiosSecure = useAxiosSecure();
   const { loginWithGoogle } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
@@ -80,7 +81,7 @@ const SocialLogin = () => {
         });
       }
       toast.dismiss(toastId);
-      navigate("/");
+      navigate(location?.state || "/");
     } catch (error) {
       toast.dismiss(toastId);
 
