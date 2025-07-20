@@ -12,6 +12,7 @@ import EmployeeList from "../pages/Dashboard/EmployeeList/EmployeeList";
 import PaymentHistory from "../pages/Dashboard/PaymentHistory.jsx/PaymentHistory";
 import EmployeeDetails from "../pages/Dashboard/EmployeeDetails/EmployeeDetails";
 import WorkRecords from "../pages/Dashboard/WorkRecords/WorkRecords";
+import AllEmployeeList from "../pages/Dashboard/AllEmployeeList/AllEmployeeList";
 
 const router = createBrowserRouter([
   // RootLayout
@@ -74,6 +75,10 @@ const router = createBrowserRouter([
       {
         path: "work-records",
         Component: WorkRecords,
+      },
+      {
+        path: "all-employee-list",
+        Component: AllEmployeeList,
       },
     ],
   },

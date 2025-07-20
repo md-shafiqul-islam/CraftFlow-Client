@@ -5,6 +5,7 @@ import {
   FiUsers,
   FiCreditCard,
   FiFileText,
+  FiUserCheck,
 } from "react-icons/fi";
 import { MdOutlineDashboard } from "react-icons/md";
 import { NavLink, Outlet } from "react-router";
@@ -146,6 +147,22 @@ const DashboardLayout = () => {
                 >
                   <FiFileText className="text-lg" />
                   Work Records
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink
+                  to="/dashboard/all-employee-list"
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 py-2 px-4 rounded-md ${
+                      isActive
+                        ? "bg-secondary text-base-100"
+                        : "hover:bg-base-100"
+                    }`
+                  }
+                >
+                  <FiUserCheck className="text-lg" />
+                  All Employee List
                 </NavLink>
               </li>
             </ul>

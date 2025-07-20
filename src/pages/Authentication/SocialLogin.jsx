@@ -53,6 +53,7 @@ const SocialLogin = () => {
         bank_account_no: generateBankAccountNumber(),
         salary: 35000,
         photo: user?.photoURL,
+        status: "active",
         isVerified: false,
       };
 

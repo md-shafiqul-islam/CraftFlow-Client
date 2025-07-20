@@ -58,6 +58,12 @@ const Register = () => {
   };
 
   const handleRegister = async (data) => {
+    // Fix designation if it's N/A
+    const cleanedDesignation = data.designation.trim().toLowerCase();
+    if (cleanedDesignation === "n/a" || cleanedDesignation === "n / a") {
+      data.designation = "Employee";
+    }
+
     const {
       name,
       email,
@@ -100,6 +106,7 @@ const Register = () => {
         bank_account_no,
         salary,
         photo: userPhoto,
+        status: "active",
         isVerified: false,
       };
       await axiosInstance.post("/users", userInfo);

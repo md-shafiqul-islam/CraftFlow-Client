@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import useAuth from "../../hooks/useAuth";
 import { Eye, EyeOff } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Login = () => {
   const {
@@ -17,6 +18,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { loginUser } = useAuth();
   const location = useLocation();
+  const axiosSecure = useAxiosSecure();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -27,6 +29,8 @@ const Login = () => {
     const toastId = toast.loading("Logging in...");
 
     try {
+      await axiosSecure.post("login-check", { email });
+
       await loginUser(email, password);
       toast.dismiss(toastId);
       Swal.fire({
@@ -39,6 +43,17 @@ const Login = () => {
       navigate(location?.state || "/");
     } catch (error) {
       toast.dismiss(toastId);
+
+      if (error?.response?.status === 403) {
+        return Swal.fire({
+          icon: "error",
+          title: "Access Denied",
+          text:
+            error.response?.data?.message ||
+            "You are not allowed to log in. Contact the Admin.",
+          confirmButtonColor: "#1a237e",
+        });
+      }
 
       const errorMap = {
         "auth/invalid-credential": "Incorrect email or password.",
