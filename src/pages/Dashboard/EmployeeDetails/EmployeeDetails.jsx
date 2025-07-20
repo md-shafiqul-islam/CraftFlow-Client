@@ -55,7 +55,7 @@ const EmployeeDetails = () => {
   } = useQuery({
     queryKey: ["employee-details", employeeId],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/user-details/${employeeId}`);
+      const res = await axiosSecure.get(`/users/${employeeId}/details`);
       return res.data;
     },
   });

@@ -15,14 +15,32 @@ const AllEmployeeList = () => {
   } = useQuery({
     queryKey: ["verified-employees"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/users?isVerified=true");
+      const res = await axiosSecure.get(
+        "/users?isVerified=true&excludeAdmin=true"
+      );
       return res.data;
     },
   });
 
+  const { mutate: makeHR } = useMutation({
+    mutationFn: async (id) => {
+      const res = await axiosSecure.patch(`/users/${id}/make-hr`);
+      return res.data;
+    },
+    onSuccess: (data) => {
+      if (data.modifiedCount > 0) {
+        toast.success("Employee promoted to HR.");
+        queryClient.invalidateQueries({ queryKey: ["verified-employees"] });
+      } else {
+        toast.error("Promotion failed.");
+      }
+    },
+    onError: () => toast.error("Something went wrong."),
+  });
+
   const { mutate: fireUser } = useMutation({
     mutationFn: async (id) => {
-      const res = await axiosSecure.patch(`/user/${id}`);
+      const res = await axiosSecure.patch(`/users/${id}/fire`);
       return res.data;
     },
 
@@ -38,10 +56,25 @@ const AllEmployeeList = () => {
     onError: () => toast.error("Something went wrong."),
   });
 
+  const handleMakeHR = async (id) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You are promoting this employee to HR.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#1a237e",
+      confirmButtonText: "Yes, promote",
+    });
+
+    if (result.isConfirmed) {
+      makeHR(id);
+    }
+  };
+
   const handleFire = async (id) => {
     const result = await Swal.fire({
       title: "Are you sure fire the employee?",
-      text: "This user will be disabled from logging in!",
+      text: "This employee will be disabled from logging in!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#1a237e",
@@ -109,6 +142,7 @@ const AllEmployeeList = () => {
                         {emp.role !== "HR" && (
                           <button
                             className="btn btn-sm btn-success"
+                            onClick={() => handleMakeHR(emp._id)}
                             title="Promote to HR"
                           >
                             <FiShield size={16} />

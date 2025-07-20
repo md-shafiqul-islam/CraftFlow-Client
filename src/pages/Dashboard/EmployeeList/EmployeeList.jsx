@@ -29,7 +29,7 @@ const EmployeeList = () => {
   } = useQuery({
     queryKey: ["employees"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/users?role");
+      const res = await axiosSecure.get("/users?excludeAdmin=true");
       return res.data;
     },
   });
