@@ -15,9 +15,7 @@ const AllEmployeeList = () => {
   } = useQuery({
     queryKey: ["verified-employees"],
     queryFn: async () => {
-      const res = await axiosSecure.get(
-        "/users?isVerified=true&excludeAdmin=true"
-      );
+      const res = await axiosSecure.get("/users/verified");
       return res.data;
     },
   });

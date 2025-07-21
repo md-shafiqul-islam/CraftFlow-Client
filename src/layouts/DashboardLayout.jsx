@@ -194,13 +194,13 @@ const DashboardLayout = () => {
             {/* User Info */}
             <div className="flex items-center gap-3 mt-6 p-2 bg-base-100 rounded-lg">
               <img
-                src={user.photoURL}
+                src={user?.photoURL}
                 alt="user"
                 className="w-10 h-10 rounded-full object-cover border border-secondary"
               />
               <div>
-                <p className="font-medium">{user.displayName}</p>
-                <p className="text-xs text-gray-500">{user.email}</p>
+                <p className="font-medium">{user?.displayName}</p>
+                <p className="text-xs text-gray-500">{user?.email}</p>
               </div>
             </div>
           </div>

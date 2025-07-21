@@ -17,7 +17,7 @@ const UserMenu = () => {
     queryKey: ["user", user.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/users?email=${user.email}`);
+      const res = await axiosSecure.get(`/users/me?email=${user.email}`);
       return res.data;
     },
     onError: (error) => {

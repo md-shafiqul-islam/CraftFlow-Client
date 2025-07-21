@@ -29,7 +29,7 @@ const EmployeeList = () => {
   } = useQuery({
     queryKey: ["employees"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/users?excludeAdmin=true");
+      const res = await axiosSecure.get("/users/employees");
       return res.data;
     },
   });
@@ -142,24 +142,9 @@ const EmployeeList = () => {
     [handleVerification]
   );
 
-  // Sort Employee
-  const sortedEmployees = useMemo(() => {
-    const rolePriority = {
-      Admin: 0,
-      HR: 1,
-      Employee: 2,
-    };
-
-    return [...employees].sort((a, b) => {
-      const roleA = rolePriority[a.role] ?? 99;
-      const roleB = rolePriority[b.role] ?? 99;
-      return roleA - roleB;
-    });
-  }, [employees]);
-
   // React Table Setup
   const table = useReactTable({
-    data: sortedEmployees,
+    data: employees,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
