@@ -220,7 +220,7 @@ const VerifiedEmployeeList = () => {
         <dialog open className="modal modal-bottom sm:modal-middle">
           <form
             onSubmit={handleSubmit(handleUpdateSalary)}
-            className="modal-box bg-base-300 text-base-content"
+            className="modal-box text-base-content"
           >
             <h3 className="font-bold text-lg text-primary mb-4">
               Update Salary for {selectedEmployee.name}
@@ -251,7 +251,7 @@ const VerifiedEmployeeList = () => {
             <div className="modal-action mt-6 flex justify-end gap-3">
               <button
                 type="button"
-                className="btn bg-base-200 text-base-content border border-accent"
+                className="btn bg-base-200 text-base-content border border-error"
                 onClick={() => {
                   setSelectedEmployee(null);
                   reset();
@@ -265,7 +265,7 @@ const VerifiedEmployeeList = () => {
                 className="btn bg-primary hover:bg-accent-focus text-white"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Updating..." : "Save"}
+                {isSubmitting ? "Updating..." : "Update"}
               </button>
             </div>
           </form>

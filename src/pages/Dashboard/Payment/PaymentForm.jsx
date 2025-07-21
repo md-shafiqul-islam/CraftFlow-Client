@@ -89,7 +89,7 @@ const PaymentForm = ({
           salary: parseInt(data.salary),
           month: data.month,
           year: data.year,
-          status: "pending",
+          paymentStatus: "pending",
           requestedAt: new Date().toISOString(),
           paymentMethodId: paymentMethod.id,
           transactionId: paymentResult.paymentIntent.id,
@@ -102,6 +102,7 @@ const PaymentForm = ({
           icon: "success",
           title: "Payment request created",
           text: "Salary payment request has been sent to the admin for approval.",
+          confirmButtonColor: "#1a237e",
         });
 
         setShowModal(false);

@@ -192,6 +192,10 @@ const MyTask = () => {
             <option value="" disabled>
               Select Task
             </option>
+            <option value="Sales">Sales</option>
+            <option value="Support">Support</option>
+            <option value="Content">Content</option>
+            <option value="Paper-work">Paper-work</option>
             <option value="Site Visit">Site Visit</option>
             <option value="Client Consultation">Client Consultation</option>
             <option value="3D Design Rendering">3D Design Rendering</option>

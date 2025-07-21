@@ -6,6 +6,7 @@ import {
   FiCreditCard,
   FiFileText,
   FiUserCheck,
+  FiDollarSign,
 } from "react-icons/fi";
 import { MdOutlineDashboard } from "react-icons/md";
 import { NavLink, Outlet } from "react-router";
@@ -179,6 +180,22 @@ const DashboardLayout = () => {
                     >
                       <FiUserCheck className="text-lg" />
                       Verified Employees
+                    </NavLink>
+                  </li>
+
+                  <li>
+                    <NavLink
+                      to="/dashboard/payroll"
+                      className={({ isActive }) =>
+                        `flex items-center gap-2 py-2 px-4 rounded-md ${
+                          isActive
+                            ? "bg-secondary text-base-100"
+                            : "hover:bg-base-100"
+                        }`
+                      }
+                    >
+                      <FiDollarSign className="text-lg" />
+                      Payroll
                     </NavLink>
                   </li>
                 </>

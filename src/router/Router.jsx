@@ -17,6 +17,7 @@ import Forbidden from "../components/Forbidden/Forbidden";
 import AdminRoute from "../routes/AdminRoute";
 import HrRoute from "../routes/HrRoute";
 import EmployeeRoute from "../routes/EmployeeRoute";
+import PayrollPage from "../pages/Dashboard/PayrollPage/PayrollPage";
 
 const router = createBrowserRouter([
   // RootLayout
@@ -109,6 +110,14 @@ const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <VerifiedEmployeeList />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "payroll",
+        element: (
+          <AdminRoute>
+            <PayrollPage />
           </AdminRoute>
         ),
       },
