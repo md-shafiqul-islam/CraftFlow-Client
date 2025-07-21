@@ -13,6 +13,8 @@ import PaymentHistory from "../pages/Dashboard/PaymentHistory.jsx/PaymentHistory
 import EmployeeDetails from "../pages/Dashboard/EmployeeDetails/EmployeeDetails";
 import WorkRecords from "../pages/Dashboard/WorkRecords/WorkRecords";
 import AllEmployeeList from "../pages/Dashboard/AllEmployeeList/AllEmployeeList";
+import Forbidden from "../components/Forbidden/Forbidden";
+import AdminRoute from "../routes/AdminRoute";
 
 const router = createBrowserRouter([
   // RootLayout
@@ -27,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: "contact-us",
         Component: ContactUs,
+      },
+      {
+        path: "/forbidden",
+        Component: Forbidden,
       },
     ],
   },
@@ -78,7 +84,11 @@ const router = createBrowserRouter([
       },
       {
         path: "all-employee-list",
-        Component: AllEmployeeList,
+        element: (
+          <AdminRoute>
+            <AllEmployeeList />
+          </AdminRoute>
+        ),
       },
     ],
   },

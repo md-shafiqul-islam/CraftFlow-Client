@@ -10,9 +10,12 @@ import {
 import { MdOutlineDashboard } from "react-icons/md";
 import { NavLink, Outlet } from "react-router";
 import useAuth from "../hooks/useAuth";
+import useUserRole from "../hooks/useUserRole";
 
 const DashboardLayout = () => {
   const { user } = useAuth();
+  const { role, roleLoading } = useUserRole();
+
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
@@ -150,21 +153,26 @@ const DashboardLayout = () => {
                 </NavLink>
               </li>
 
-              <li>
-                <NavLink
-                  to="/dashboard/all-employee-list"
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 py-2 px-4 rounded-md ${
-                      isActive
-                        ? "bg-secondary text-base-100"
-                        : "hover:bg-base-100"
-                    }`
-                  }
-                >
-                  <FiUserCheck className="text-lg" />
-                  All Employee List
-                </NavLink>
-              </li>
+              {/* Admin's Links */}
+              {!roleLoading && role === "Admin" && (
+                <>
+                  <li>
+                    <NavLink
+                      to="/dashboard/all-employee-list"
+                      className={({ isActive }) =>
+                        `flex items-center gap-2 py-2 px-4 rounded-md ${
+                          isActive
+                            ? "bg-secondary text-base-100"
+                            : "hover:bg-base-100"
+                        }`
+                      }
+                    >
+                      <FiUserCheck className="text-lg" />
+                      All Employee List
+                    </NavLink>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
 

@@ -143,10 +143,6 @@ const EmployeeDetails = () => {
               </BarChart>
             </ResponsiveContainer>
 
-            <p className="text-sm text-center text-base-content/70 mt-2">
-              Salary
-            </p>
-
             <div className="mt-6 flex flex-wrap justify-between items-center gap-4">
               <div className="text-base-content/70 text-sm">
                 Total Salary: <span className="font-medium">{totalSalary}</span>
