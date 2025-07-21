@@ -5,11 +5,13 @@ import toast from "react-hot-toast";
 import { FiDollarSign, FiShield, FiUserX } from "react-icons/fi";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { FaThLarge, FaThList } from "react-icons/fa";
 
 const VerifiedEmployeeList = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [viewMode, setViewMode] = useState("table");
 
   const {
     register,
@@ -127,93 +129,178 @@ const VerifiedEmployeeList = () => {
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-10">
-      <h2 className="text-2xl font-semibold mb-6 text-accent">
-        All Employee List
-      </h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold text-accent">
+          All Employee List
+        </h2>
+        <button
+          onClick={() => setViewMode(viewMode === "table" ? "card" : "table")}
+          className="btn btn-sm btn-outline rounded-full text-lg transition-all duration-300"
+          title={
+            viewMode === "table"
+              ? "Switch to Card View"
+              : "Switch to Table View"
+          }
+        >
+          {viewMode === "table" ? <FaThLarge /> : <FaThList />}
+        </button>
+      </div>
 
-      <div className="overflow-x-auto bg-base-100 rounded-lg shadow">
-        <table className="table w-full">
-          <thead className="bg-base-300 text-base-content">
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Designation</th>
-              <th>Role</th>
-              <th>Salary</th>
-              <th className="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {isError ? (
+      {viewMode === "table" ? (
+        <div className="overflow-x-auto bg-base-100 rounded-lg shadow">
+          <table className="table w-full">
+            <thead className="bg-base-300 text-base-content">
               <tr>
-                <td colSpan={7} className="text-center text-error py-6">
-                  Failed to load data.
-                </td>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Designation</th>
+                <th>Role</th>
+                <th>Salary</th>
+                <th className="text-center">Actions</th>
               </tr>
-            ) : isLoading ? (
-              <tr>
-                <td colSpan={7} className="text-center py-20">
-                  <span className="loading loading-spinner text-secondary mx-auto"></span>
-                </td>
-              </tr>
-            ) : employees.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="text-center text-accent py-6">
-                  No verified employees found.
-                </td>
-              </tr>
-            ) : (
-              employees.map((emp, idx) => (
-                <tr key={emp._id}>
-                  <td>{idx + 1}</td>
-                  <td>{emp.name}</td>
-                  <td>{emp.email}</td>
-                  <td>{emp.designation}</td>
-                  <td>{emp.role}</td>
-                  <td>{emp.salary}</td>
-                  <td className="flex justify-center gap-2">
-                    {emp.status === "fired" ? (
-                      <span className="badge badge-error text-white px-3 py-2 text-sm font-semibold">
-                        <FiUserX size={16} className="inline-block mr-1" />
-                        Fired
-                      </span>
-                    ) : (
-                      <>
-                        {emp.role !== "HR" && (
-                          <button
-                            className="btn btn-sm btn-success"
-                            onClick={() => handleMakeHR(emp._id)}
-                            title="Promote to HR"
-                          >
-                            <FiShield size={16} />
-                          </button>
-                        )}
-
-                        <button
-                          className="btn btn-sm btn-warning text-white"
-                          onClick={() => openSalaryModal(emp)}
-                          title="Update Salary"
-                        >
-                          <FiDollarSign size={16} />
-                        </button>
-
-                        <button
-                          className="btn btn-sm btn-error text-white"
-                          onClick={() => handleFireEmployee(emp._id)}
-                          title="Fire employee"
-                        >
-                          <FiUserX size={16} />
-                        </button>
-                      </>
-                    )}
+            </thead>
+            <tbody>
+              {isError ? (
+                <tr>
+                  <td colSpan={7} className="text-center text-error py-6">
+                    Failed to load data.
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+              ) : isLoading ? (
+                <tr>
+                  <td colSpan={7} className="text-center py-20">
+                    <span className="loading loading-spinner text-secondary mx-auto"></span>
+                  </td>
+                </tr>
+              ) : employees.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="text-center text-accent py-6">
+                    No verified employees found.
+                  </td>
+                </tr>
+              ) : (
+                employees.map((emp, idx) => (
+                  <tr key={emp._id}>
+                    <td>{idx + 1}</td>
+                    <td>{emp.name}</td>
+                    <td>{emp.email}</td>
+                    <td>{emp.designation}</td>
+                    <td>{emp.role}</td>
+                    <td>{emp.salary}</td>
+                    <td className="flex justify-center gap-2">
+                      {emp.status === "fired" ? (
+                        <span className="badge badge-error text-white px-3 py-2 text-sm font-semibold flex items-center gap-1">
+                          <FiUserX size={16} />
+                          Fired
+                        </span>
+                      ) : (
+                        <>
+                          {emp.role !== "HR" && (
+                            <button
+                              className="btn btn-sm btn-success"
+                              onClick={() => handleMakeHR(emp._id)}
+                              title="Promote to HR"
+                            >
+                              <FiShield size={16} />
+                            </button>
+                          )}
+
+                          <button
+                            className="btn btn-sm btn-warning text-white"
+                            onClick={() => openSalaryModal(emp)}
+                            title="Update Salary"
+                          >
+                            <FiDollarSign size={16} />
+                          </button>
+
+                          <button
+                            className="btn btn-sm btn-error text-white"
+                            onClick={() => handleFireEmployee(emp._id)}
+                            title="Fire employee"
+                          >
+                            <FiUserX size={16} />
+                          </button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {isError ? (
+            <p className="text-center text-error col-span-full">
+              Failed to load data.
+            </p>
+          ) : isLoading ? (
+            <div className="flex justify-center col-span-full">
+              <span className="loading loading-spinner text-secondary"></span>
+            </div>
+          ) : employees.length === 0 ? (
+            <p className="text-center text-accent col-span-full">
+              No verified employees found.
+            </p>
+          ) : (
+            employees.map((emp) => (
+              <div
+                key={emp._id}
+                className="bg-base-100 p-6 rounded-lg shadow-md border border-base-300"
+              >
+                <h3 className="font-semibold text-lg text-accent mb-2">
+                  {emp.name}
+                </h3>
+                <p className="text-text-accent italic mb-1">{emp.email}</p>
+                <p className="mb-1">
+                  <strong>Designation:</strong> {emp.designation}
+                </p>
+                <p className="mb-1">
+                  <strong>Role:</strong> {emp.role}
+                </p>
+                <p className="mb-3">
+                  <strong>Salary:</strong> {emp.salary}
+                </p>
+
+                {emp.status === "fired" ? (
+                  <span className="badge badge-error text-white px-3 py-2 text-sm font-semibold flex items-center gap-1">
+                    <FiUserX size={16} />
+                    Fired
+                  </span>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {emp.role !== "HR" && (
+                      <button
+                        className="btn btn-sm btn-success"
+                        onClick={() => handleMakeHR(emp._id)}
+                        title="Promote to HR"
+                      >
+                        <FiShield size={16} />
+                      </button>
+                    )}
+                    <button
+                      className="btn btn-sm btn-warning text-white"
+                      onClick={() => openSalaryModal(emp)}
+                      title="Update Salary"
+                    >
+                      <FiDollarSign size={16} />
+                    </button>
+                    <button
+                      className="btn btn-sm btn-error text-white"
+                      onClick={() => handleFireEmployee(emp._id)}
+                      title="Fire employee"
+                    >
+                      <FiUserX size={16} />
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))
+          )}
+        </div>
+      )}
 
       {/* Salary Update Modal */}
       {selectedEmployee && (
