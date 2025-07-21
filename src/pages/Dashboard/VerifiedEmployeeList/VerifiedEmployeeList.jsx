@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import { FiShield, FiUserX } from "react-icons/fi";
 
-const AllEmployeeList = () => {
+const VerifiedEmployeeList = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
@@ -166,4 +166,4 @@ const AllEmployeeList = () => {
   );
 };
 
-export default AllEmployeeList;
+export default VerifiedEmployeeList;

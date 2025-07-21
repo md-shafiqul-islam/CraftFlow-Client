@@ -30,7 +30,7 @@ const MyTask = () => {
     queryKey: ["my-tasks", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/work-sheet?email=${user?.email}`);
+      const res = await axiosSecure.get(`/work-sheet/me?email=${user?.email}`);
       return res.data;
     },
   });

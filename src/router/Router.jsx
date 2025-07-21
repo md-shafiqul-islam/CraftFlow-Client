@@ -12,9 +12,11 @@ import EmployeeList from "../pages/Dashboard/EmployeeList/EmployeeList";
 import PaymentHistory from "../pages/Dashboard/PaymentHistory.jsx/PaymentHistory";
 import EmployeeDetails from "../pages/Dashboard/EmployeeDetails/EmployeeDetails";
 import WorkRecords from "../pages/Dashboard/WorkRecords/WorkRecords";
-import AllEmployeeList from "../pages/Dashboard/AllEmployeeList/AllEmployeeList";
+import VerifiedEmployeeList from "../pages/Dashboard/VerifiedEmployeeList/VerifiedEmployeeList";
 import Forbidden from "../components/Forbidden/Forbidden";
 import AdminRoute from "../routes/AdminRoute";
+import HrRoute from "../routes/HrRoute";
+import EmployeeRoute from "../routes/EmployeeRoute";
 
 const router = createBrowserRouter([
   // RootLayout
@@ -64,29 +66,49 @@ const router = createBrowserRouter([
     children: [
       {
         path: "my-task",
-        Component: MyTask,
+        element: (
+          <EmployeeRoute>
+            <MyTask />
+          </EmployeeRoute>
+        ),
       },
       {
         path: "payment-history",
-        Component: PaymentHistory,
+        element: (
+          <EmployeeRoute>
+            <PaymentHistory />
+          </EmployeeRoute>
+        ),
       },
       {
         path: "employee-list",
-        Component: EmployeeList,
+        element: (
+          <HrRoute>
+            <EmployeeList />
+          </HrRoute>
+        ),
       },
       {
         path: "employee-details/:employeeId",
-        Component: EmployeeDetails,
+        element: (
+          <HrRoute>
+            <EmployeeDetails />
+          </HrRoute>
+        ),
       },
       {
         path: "work-records",
-        Component: WorkRecords,
+        element: (
+          <HrRoute>
+            <WorkRecords />
+          </HrRoute>
+        ),
       },
       {
         path: "all-employee-list",
         element: (
           <AdminRoute>
-            <AllEmployeeList />
+            <VerifiedEmployeeList />
           </AdminRoute>
         ),
       },

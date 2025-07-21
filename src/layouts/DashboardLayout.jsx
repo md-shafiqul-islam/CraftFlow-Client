@@ -89,71 +89,81 @@ const DashboardLayout = () => {
                 </NavLink>
               </li>
 
-              <li>
-                <NavLink
-                  to="/dashboard/my-task"
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 py-2 px-4 rounded-md ${
-                      isActive
-                        ? "bg-secondary text-base-100"
-                        : "hover:bg-base-100"
-                    }`
-                  }
-                >
-                  <FiBox className="text-lg" />
-                  My Tasks
-                </NavLink>
-              </li>
+              {/* Employee Link's */}
+              {!roleLoading && role === "Employee" && (
+                <>
+                  <li>
+                    <NavLink
+                      to="/dashboard/my-task"
+                      className={({ isActive }) =>
+                        `flex items-center gap-2 py-2 px-4 rounded-md ${
+                          isActive
+                            ? "bg-secondary text-base-100"
+                            : "hover:bg-base-100"
+                        }`
+                      }
+                    >
+                      <FiBox className="text-lg" />
+                      My Tasks
+                    </NavLink>
+                  </li>
 
-              <li>
-                <NavLink
-                  to="/dashboard/payment-history"
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 py-2 px-4 rounded-md ${
-                      isActive
-                        ? "bg-secondary text-base-100"
-                        : "hover:bg-base-100"
-                    }`
-                  }
-                >
-                  <FiCreditCard className="text-lg" />
-                  Payment History
-                </NavLink>
-              </li>
+                  <li>
+                    <NavLink
+                      to="/dashboard/payment-history"
+                      className={({ isActive }) =>
+                        `flex items-center gap-2 py-2 px-4 rounded-md ${
+                          isActive
+                            ? "bg-secondary text-base-100"
+                            : "hover:bg-base-100"
+                        }`
+                      }
+                    >
+                      <FiCreditCard className="text-lg" />
+                      Payment History
+                    </NavLink>
+                  </li>
+                </>
+              )}
 
-              <li>
-                <NavLink
-                  to="/dashboard/employee-list"
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 py-2 px-4 rounded-md ${
-                      isActive
-                        ? "bg-secondary text-base-100"
-                        : "hover:bg-base-100"
-                    }`
-                  }
-                >
-                  <FiUsers className="text-lg" />
-                  Employee List
-                </NavLink>
-              </li>
+              {/* HR Link's */}
+              {!roleLoading && role === "HR" && (
+                <>
+                  <li>
+                    <NavLink
+                      to="/dashboard/employee-list"
+                      className={({ isActive }) =>
+                        `flex items-center gap-2 py-2 px-4 rounded-md ${
+                          isActive
+                            ? "bg-secondary text-base-100"
+                            : "hover:bg-base-100"
+                        }`
+                      }
+                    >
+                      <FiUsers className="text-lg" />
+                      Employee List
+                    </NavLink>
+                  </li>
 
-              <li>
-                <NavLink
-                  to="/dashboard/work-records"
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 py-2 px-4 rounded-md ${
-                      isActive
-                        ? "bg-secondary text-base-100"
-                        : "hover:bg-base-100"
-                    }`
-                  }
-                >
-                  <FiFileText className="text-lg" />
-                  Work Records
-                </NavLink>
-              </li>
+                  <li>
+                    <NavLink
+                      to="/dashboard/work-records"
+                      className={({ isActive }) =>
+                        `flex items-center gap-2 py-2 px-4 rounded-md ${
+                          isActive
+                            ? "bg-secondary text-base-100"
+                            : "hover:bg-base-100"
+                        }`
+                      }
+                    >
+                      <FiFileText className="text-lg" />
+                      Work Records
+                    </NavLink>
+                  </li>
+                </>
+              )}
 
-              {/* Admin's Links */}
+              {/* Admin Link's */}
               {!roleLoading && role === "Admin" && (
                 <>
                   <li>
@@ -168,7 +178,7 @@ const DashboardLayout = () => {
                       }
                     >
                       <FiUserCheck className="text-lg" />
-                      All Employee List
+                      Verified Employees
                     </NavLink>
                   </li>
                 </>

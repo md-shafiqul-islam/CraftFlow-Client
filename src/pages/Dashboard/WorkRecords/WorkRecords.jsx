@@ -31,7 +31,7 @@ const WorkRecords = () => {
   const { data: employees = [], isLoading: employeesLoading } = useQuery({
     queryKey: ["employees"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/users?role=Employee");
+      const res = await axiosSecure.get(`/users?role=Employee`);
       return res.data;
     },
   });
