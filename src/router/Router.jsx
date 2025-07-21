@@ -18,6 +18,7 @@ import AdminRoute from "../routes/AdminRoute";
 import HrRoute from "../routes/HrRoute";
 import EmployeeRoute from "../routes/EmployeeRoute";
 import PayrollPage from "../pages/Dashboard/PayrollPage/PayrollPage";
+import Messages from "../pages/Dashboard/Messages/Messages";
 
 const router = createBrowserRouter([
   // RootLayout
@@ -118,6 +119,14 @@ const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <PayrollPage />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "messages",
+        element: (
+          <AdminRoute>
+            <Messages />
           </AdminRoute>
         ),
       },
