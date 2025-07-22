@@ -1,12 +1,51 @@
-# React + Vite
+CraftFlow - Employee Management System
+Live Site: https://craftflow-57fc0.web.app/
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Admin Credentials
+Email: admin@gmail.com
+Password: A1234@
 
-Currently, two official plugins are available:
+Project Overview
+CraftFlow is a full-stack employee management web app designed to help companies monitor employee workloads, track payments, and streamline HR operations with role-based access control. It’s responsive, secure, and built with modern tools like React, Firebase, MongoDB, and TanStack Query.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Key Features
+Role-based Authentication: Secure login and registration with Firebase email/password and social (Google) authentication. Roles: Employee, HR, Admin.
 
-## Expanding the ESLint configuration
+Employee Dashboard: Employees can submit daily work reports, edit or delete tasks without page reloads, and view their payment history.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+HR Dashboard: View and verify employee profiles, approve payments, and access detailed reports with charts.
+
+Admin Dashboard: Manage all users, promote employees to HR, fire users to disable login, and approve payroll requests.
+
+Real-time Updates: UI instantly reflects CRUD operations with no page reload using React Query and state management.
+
+Responsive Design: Works seamlessly across mobile, tablet, and desktop devices.
+
+Secure API: Backend protects role-specific routes with JWT/Firebase token middleware for authorization.
+
+Payment Integration: HR can initiate salary payments; Admin can approve them, preventing duplicate payments for the same month.
+
+Data Visualization: Dynamic charts display employee salary history and workload summaries.
+
+Notifications: Friendly toast and modal alerts for actions like login, errors, CRUD operations, and payments — no default browser alerts.
+
+Image Upload: User profile photos uploaded via imgbb API during registration.
+
+Environment Variables: Sensitive config data like Firebase and MongoDB credentials hidden in environment variables.
+
+Clean Code & Git Commits: Over 20 meaningful commits on client and 12 on server showcasing development progress.
+
+Tech Stack
+React, React Hook Form, React Query, React Router
+
+Firebase Authentication
+
+Express.js + MongoDB backend
+
+Tailwind CSS + DaisyUI for styling
+
+TanStack Table for data grids
+
+Stripe for payment processing
+
+Axios for HTTP requests
