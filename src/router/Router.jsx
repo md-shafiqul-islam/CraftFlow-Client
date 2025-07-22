@@ -20,6 +20,7 @@ import EmployeeRoute from "../routes/EmployeeRoute";
 import PayrollPage from "../pages/Dashboard/PayrollPage/PayrollPage";
 import Messages from "../pages/Dashboard/Messages/Messages";
 import DashboardHome from "../pages/Dashboard/DashboardHome/DashboardHome";
+import Page404 from "../components/Page404/Page404";
 
 const router = createBrowserRouter([
   // RootLayout
@@ -136,6 +137,12 @@ const router = createBrowserRouter([
         ),
       },
     ],
+  },
+
+  // Error
+  {
+    path: "/*",
+    Component: Page404,
   },
 ]);
 

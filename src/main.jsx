@@ -7,16 +7,19 @@ import AuthProvider from "./providers/AuthProvider";
 import { Toaster } from "react-hot-toast";
 import "react-datepicker/dist/react-datepicker.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ThemeProvider from "./providers/ThemeProvider";
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Toaster position="top-right" reverseOrder={false} />
-        <RouterProvider router={router}></RouterProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <Toaster position="top-right" reverseOrder={false} />
+          <RouterProvider router={router}></RouterProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>
 );

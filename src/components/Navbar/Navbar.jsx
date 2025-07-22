@@ -1,13 +1,14 @@
 import { Link, NavLink } from "react-router";
-import { useEffect, useState } from "react";
+import { use, useState } from "react";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import CraftFlowLogo from "../CraftFlowLogo/CraftFlowLogo";
 import useAuth from "../../hooks/useAuth";
 import UserMenu from "../UserMenu/UserMenu";
+import { ThemeContext } from "../../contexts/ThemeContext";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [theme, setTheme] = useState("light");
+  const { theme, toggleTheme } = use(ThemeContext);
   const { user } = useAuth();
 
   const commonNavItems = [
@@ -15,19 +16,6 @@ const Navbar = () => {
     { name: "Contact Us", path: "/contact-us" },
     ...(user ? [{ name: "Dashboard", path: "/dashboard" }] : []),
   ];
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "light";
-    setTheme(savedTheme);
-    document.documentElement.setAttribute("data-theme", savedTheme);
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme);
-  };
 
   return (
     <>
