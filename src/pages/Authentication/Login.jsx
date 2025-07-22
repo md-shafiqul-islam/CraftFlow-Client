@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import useAuth from "../../hooks/useAuth";
 import { Eye, EyeOff } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useAxios from "../../hooks/useAxios";
 
 const Login = () => {
   const {
@@ -18,7 +18,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { loginUser } = useAuth();
   const location = useLocation();
-  const axiosSecure = useAxiosSecure();
+  const axiosInstance = useAxios();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -29,7 +29,7 @@ const Login = () => {
     const toastId = toast.loading("Logging in...");
 
     try {
-      await axiosSecure.post("login-check", { email });
+      await axiosInstance.post("login-check", { email });
 
       await loginUser(email, password);
       toast.dismiss(toastId);
