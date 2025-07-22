@@ -20,9 +20,6 @@ const UserMenu = () => {
       const res = await axiosSecure.get(`/users/me?email=${user.email}`);
       return res.data;
     },
-    onError: (error) => {
-      console.error("Failed to fetch user info:", error);
-    },
   });
 
   const handleLogout = async () => {
@@ -117,15 +114,6 @@ const UserMenu = () => {
             >
               <LayoutDashboard size={16} />
               Dashboard
-            </Link>
-
-            <Link
-              to="/profile"
-              className="flex items-center gap-2 hover:bg-base-200 px-3 py-2 rounded-md transition"
-              onClick={() => setOpen(false)}
-            >
-              <User size={16} />
-              Profile
             </Link>
           </div>
 

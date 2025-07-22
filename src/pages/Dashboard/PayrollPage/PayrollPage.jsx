@@ -15,7 +15,7 @@ const Payroll = () => {
   } = useQuery({
     queryKey: ["payment-pending"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/payments/pending");
+      const res = await axiosSecure.get("/payments/all");
       return res.data;
     },
   });

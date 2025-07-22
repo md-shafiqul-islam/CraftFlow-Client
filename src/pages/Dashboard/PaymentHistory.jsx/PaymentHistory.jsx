@@ -67,7 +67,7 @@ const PaymentHistory = () => {
                   <td>${parseInt(p.salary).toLocaleString()}</td>
                   <td>{p.transactionId}</td>
                   <td>{new Date(p.requestedAt).toLocaleDateString()}</td>
-                  <td>{p.status}</td>
+                  <td>{p.paymentStatus}</td>
                 </tr>
               ))}
             </tbody>

@@ -19,6 +19,7 @@ import HrRoute from "../routes/HrRoute";
 import EmployeeRoute from "../routes/EmployeeRoute";
 import PayrollPage from "../pages/Dashboard/PayrollPage/PayrollPage";
 import Messages from "../pages/Dashboard/Messages/Messages";
+import DashboardHome from "../pages/Dashboard/DashboardHome/DashboardHome";
 
 const router = createBrowserRouter([
   // RootLayout
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
+      {
+        index: true,
+        Component: DashboardHome,
+      },
       {
         path: "my-task",
         element: (

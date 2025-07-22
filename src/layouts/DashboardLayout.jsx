@@ -212,7 +212,7 @@ const DashboardLayout = () => {
                       }
                     >
                       <FiMail className="text-lg" />
-                      User Messages
+                      Messages
                     </NavLink>
                   </li>
                 </>
