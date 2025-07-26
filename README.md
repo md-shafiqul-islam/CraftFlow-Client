@@ -117,7 +117,7 @@ npm install
 
 # 3. Set up environment variables
 # For client: create `.env` file inside `craftflow-client`
-VITE_API_URL=http://localhost:5000
+VITE_API_URL=https://craftflow-server.vercel.app
 VITE_IMGBB_API_KEY=VITE_image_key
 VITE_FIREBASE:
 API_KEY=VITE_apiKey
