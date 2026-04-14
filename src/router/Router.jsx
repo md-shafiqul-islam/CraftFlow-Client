@@ -21,6 +21,9 @@ import PayrollPage from "../pages/Dashboard/PayrollPage/PayrollPage";
 import Messages from "../pages/Dashboard/Messages/Messages";
 import DashboardHome from "../pages/Dashboard/DashboardHome/DashboardHome";
 import Page404 from "../components/Page404/Page404";
+import About from "../pages/About/About";
+import UseCases from "../pages/UseCases/UseCases";
+import Support from "../pages/Support/Support";
 
 const router = createBrowserRouter([
   // RootLayout
@@ -33,7 +36,19 @@ const router = createBrowserRouter([
         Component: Home,
       },
       {
-        path: "contact-us",
+        path: "/use-cases",
+        Component: UseCases,
+      },
+      {
+        path: "/support",
+        Component: Support,
+      },
+      {
+        path: "/about",
+        Component: About,
+      },
+      {
+        path: "/contact-us",
         Component: ContactUs,
       },
       {

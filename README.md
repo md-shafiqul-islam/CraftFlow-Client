@@ -1,51 +1,110 @@
-CraftFlow - Employee Management System
-Live Site: https://craftflow-57fc0.web.app/
+# CraftFlow - Employee Management System
 
-Admin Credentials
-Email: admin@gmail.com
+**Live Site URL:**  
+🌐 [https://craftflow-57fc0.web.app](https://craftflow-57fc0.web.app)
+
+## 🧪 Admin Test Credentials
+
+Email: admin@gmail.com  
 Password: A1234@
 
-Project Overview
-CraftFlow is a full-stack employee management web app designed to help companies monitor employee workloads, track payments, and streamline HR operations with role-based access control. It’s responsive, secure, and built with modern tools like React, Firebase, MongoDB, and TanStack Query.
+## 🚀 Project Description
 
-Key Features
-Role-based Authentication: Secure login and registration with Firebase email/password and social (Google) authentication. Roles: Employee, HR, Admin.
+**CraftFlow** is a full-stack role-based employee management system that allows employees to log work hours, HRs to manage and verify users and initiate payrolls, and Admins to approve salary payments via Stripe. The app supports secure authentication with Firebase, protected routes with JWT, and real-time dashboard updates.
 
-Employee Dashboard: Employees can submit daily work reports, edit or delete tasks without page reloads, and view their payment history.
+## 🔥 Key Features
 
-HR Dashboard: View and verify employee profiles, approve payments, and access detailed reports with charts.
+- ✅ **User Authentication (Email, Google & Role Selection)**
 
-Admin Dashboard: Manage all users, promote employees to HR, fire users to disable login, and approve payroll requests.
+  - Supports registration via email/password and social login (Google).
+  - Role selection at sign-up (Employee or HR only).
 
-Real-time Updates: UI instantly reflects CRUD operations with no page reload using React Query and state management.
+- 🔐 **JWT-Protected Routes**
 
-Responsive Design: Works seamlessly across mobile, tablet, and desktop devices.
+  - Backend APIs are protected using JWT.
+  - Access is role-based: Employee, HR, or Admin.
 
-Secure API: Backend protects role-specific routes with JWT/Firebase token middleware for authorization.
+- 📝 **Task Submission & Management (Employee)**
 
-Payment Integration: HR can initiate salary payments; Admin can approve them, preventing duplicate payments for the same month.
+  - Employees can log work hours with task name, date, and hours.
+  - Tasks are editable and deletable.
 
-Data Visualization: Dynamic charts display employee salary history and workload summaries.
+- 📋 **Employee List & Verification (HR)**
 
-Notifications: Friendly toast and modal alerts for actions like login, errors, CRUD operations, and payments — no default browser alerts.
+  - HR can view and verify employees.
+  - Verified employees are eligible for salary payment.
 
-Image Upload: User profile photos uploaded via imgbb API during registration.
+- 📅 **Work Record Filter (HR)**
 
-Environment Variables: Sensitive config data like Firebase and MongoDB credentials hidden in environment variables.
+  - Filter employee task records by name and month.
+  - View total work hours for any month.
 
-Clean Code & Git Commits: Over 20 meaningful commits on client and 12 on server showcasing development progress.
+- 💸 **Payroll Request (HR) & Payment (Admin)**
 
-Tech Stack
-React, React Hook Form, React Query, React Router
+  - HR initiates salary requests for verified employees.
+  - Admin views pending requests and approves payments via Stripe.
+  - Prevents duplicate payment for the same month.
 
-Firebase Authentication
+- 🛑 **Fire or Promote Users (Admin)**
 
-Express.js + MongoDB backend
+  - Admin can promote employees to HR.
+  - Admin can fire (soft-disable) employees, preventing login access.
 
-Tailwind CSS + DaisyUI for styling
+- 📊 **Charts & Dashboards**
 
-TanStack Table for data grids
+  - Salary payment and work log history shown via Recharts.
 
-Stripe for payment processing
+- 🖼️ **Image Upload**
 
-Axios for HTTP requests
+  - Profile photos uploaded to imgbb during registration.
+
+- ✨ **Sleek UI/UX**
+  - Dashboard styled with TailwindCSS, DaisyUI, SweetAlert2, and Lottie animations.
+
+## 🧰 Tech Stack
+
+### Frontend:
+
+- React 19
+- React Router 7
+- React Hook Form + Yup
+- Firebase Authentication
+- React Query (TanStack)
+- TailwindCSS + DaisyUI
+- Recharts, Lottie, SweetAlert2
+- Axios with interceptors
+- Hosted on Firebase
+
+### Backend:
+
+- Node.js + Express
+- MongoDB (MongoDB Atlas)
+- Firebase Admin SDK
+- JWT Authentication
+- Stripe Payment Integration
+- CORS, dotenv
+- Hosted on Vercel
+
+## 🛡️ Security
+
+- Firebase access token is retrieved on login and injected into Axios headers.
+- Role-based access control for all protected endpoints.
+- Token verification with Firebase Admin SDK and custom middleware.
+- Auto logout on token expiration or unauthorized access.
+
+---
+
+### 📁 Folder Structure
+
+- `client/` — React frontend with pages, layouts, components, hooks, and services
+- `server/` — Node.js backend with routes, controllers, middleware, and configs
+
+---
+
+### 👨‍💻 Author
+
+Developed by Md. Shafiqul Islam
+
+---
+
+Feel free to fork, clone, or contribute!

@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router";
-import { use, useState } from "react";
+import { use, useState, useEffect } from "react";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import CraftFlowLogo from "../CraftFlowLogo/CraftFlowLogo";
 import useAuth from "../../hooks/useAuth";
@@ -8,58 +8,97 @@ import { ThemeContext } from "../../contexts/ThemeContext";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
   const { theme, toggleTheme } = use(ThemeContext);
   const { user } = useAuth();
 
+  // 🔒 Lock scroll
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "auto";
+    return () => (document.body.style.overflow = "auto");
+  }, [menuOpen]);
+
+  // 📌 Scroll detection
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const commonNavItems = [
     { name: "Home", path: "/" },
-    { name: "Contact Us", path: "/contact-us" },
+    { name: "Use Cases", path: "/use-cases" },
+    { name: "Support", path: "/support" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact-us" },
     ...(user ? [{ name: "Dashboard", path: "/dashboard" }] : []),
   ];
 
   return (
     <>
-      <nav className="bg-gradient-to-r from-base-200/80 via-base-300/60 to-base-200/40 shadow-lg backdrop-blur-sm">
+      {/* ================= NAVBAR ================= */}
+      <nav
+        className={`sticky top-0 z-[9999] w-full transition-all duration-300 ${
+          scrolled
+            ? "bg-base-100/95 backdrop-blur-xl shadow-md border-base-300"
+            : "bg-base-100/70 backdrop-blur-md"
+        }`}
+      >
         <div className="flex items-center justify-between px-4 py-3 max-w-7xl mx-auto">
-          {/* Left: Logo + Mobile Toggle */}
-          <div className="flex justify-center items-center gap-5">
+          {/* LEFT */}
+          <div className="flex items-center gap-4">
             <button
-              className="lg:hidden cursor-pointer"
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-label="Toggle Menu"
+              className="lg:hidden p-2 rounded-lg hover:bg-base-200 transition"
+              onClick={() => setMenuOpen(true)}
             >
-              {menuOpen ? <X /> : <Menu />}
+              <Menu />
             </button>
 
-            <CraftFlowLogo />
+            {/* ✅ Logo ONLY for desktop */}
+            <div className="hidden lg:block">
+              <CraftFlowLogo />
+            </div>
           </div>
 
-          {/* Middle: Desktop Nav Items */}
-          <ul className="hidden lg:flex justify-center items-center gap-5">
+          {/* CENTER */}
+          <ul className="hidden lg:flex items-center gap-8">
             {commonNavItems.map((item) => (
               <li key={item.name}>
                 <NavLink
                   to={item.path}
                   className={({ isActive }) =>
-                    `px-3 py-2 rounded-md font-semibold transition-colors ${
+                    `relative text-sm font-medium transition ${
                       isActive
-                        ? "bg-base-100 text-secondary"
-                        : "hover:bg-base-100 text-accent"
+                        ? "text-secondary"
+                        : "text-base-content/70 hover:text-secondary"
                     }`
                   }
                 >
-                  {item.name}
+                  {({ isActive }) => (
+                    <>
+                      {item.name}
+                      <span
+                        className={`absolute left-0 -bottom-1 h-[2px] bg-secondary transition-all duration-300 ${
+                          isActive ? "w-full" : "w-0"
+                        }`}
+                      />
+                    </>
+                  )}
                 </NavLink>
               </li>
             ))}
           </ul>
 
-          {/* Right: Theme Toggle */}
-          <div className="flex justify-center items-center gap-5">
+          {/* RIGHT */}
+          <div className="flex items-center gap-3">
             <button
               onClick={toggleTheme}
-              className="btn btn-sm btn-outline rounded-full"
-              title="Toggle Theme"
+              className="p-2 rounded-full hover:bg-base-200 transition"
             >
               {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
             </button>
@@ -67,48 +106,73 @@ const Navbar = () => {
             {user ? (
               <UserMenu />
             ) : (
-              <>
-                <Link to="/login">
-                  <button className="btn btn-outline text-primary font-bold">
-                    Login
-                  </button>
-                </Link>
-              </>
+              <Link to="/login">
+                <button className="px-4 py-2 rounded-lg bg-secondary text-base-100 font-medium hover:opacity-90 transition">
+                  Login
+                </button>
+              </Link>
             )}
           </div>
         </div>
       </nav>
 
-      {/* Mobile Menu Drawer */}
+      {/* ================= OVERLAY ================= */}
       {menuOpen && (
-        <div className="fixed inset-0 z-50">
-          <div
-            className="absolute inset-0"
-            onClick={() => setMenuOpen(false)}
-          />
-          <div className="absolute mt-16 bg-base-300 w-fit rounded-r-xl shadow-lg p-5">
-            <ul className="flex flex-col gap-3">
-              {commonNavItems.map((item) => (
-                <li key={item.name}>
-                  <NavLink
-                    to={item.path}
-                    onClick={() => setMenuOpen(false)}
-                    className={({ isActive }) =>
-                      `flex px-3 py-2 rounded-md font-semibold transition-colors ${
-                        isActive
-                          ? "bg-base-100 text-secondary"
-                          : "hover:bg-base-100 text-accent"
-                      }`
-                    }
-                  >
-                    {item.name}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+        <div
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+          onClick={() => setMenuOpen(false)}
+        />
       )}
+
+      {/* ================= MOBILE DRAWER ================= */}
+      <div
+        className={`fixed top-0 left-0 z-50 h-screen w-72 bg-base-100 border-r border-base-300 shadow-xl transform transition-transform duration-300 ${
+          menuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex flex-col h-full">
+          {/* ✅ HEADER (NO LOGO) */}
+          <div className="flex justify-end p-4 border-b border-base-300">
+            <button
+              onClick={() => setMenuOpen(false)}
+              className="p-2 rounded-md hover:bg-base-200 transition"
+            >
+              <X size={22} />
+            </button>
+          </div>
+
+          {/* NAV ITEMS */}
+          <div className="flex flex-col gap-2 p-4 flex-1">
+            {commonNavItems.map((item) => (
+              <NavLink
+                key={item.name}
+                to={item.path}
+                onClick={() => setMenuOpen(false)}
+                className={({ isActive }) =>
+                  `px-4 py-3 rounded-lg text-sm font-medium transition ${
+                    isActive
+                      ? "bg-secondary/10 text-secondary"
+                      : "text-base-content/70 hover:bg-base-200 hover:text-secondary"
+                  }`
+                }
+              >
+                {item.name}
+              </NavLink>
+            ))}
+          </div>
+
+          {/* FOOTER */}
+          {!user && (
+            <div className="p-4 border-t border-base-300">
+              <Link to="/login" onClick={() => setMenuOpen(false)}>
+                <button className="w-full py-3 rounded-lg bg-secondary text-base-100 font-medium">
+                  Login
+                </button>
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
     </>
   );
 };

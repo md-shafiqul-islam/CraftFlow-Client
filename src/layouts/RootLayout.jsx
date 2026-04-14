@@ -7,17 +7,16 @@ const RootLayout = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <ScrollToTop />
-      <header className="sticky top-0 z-[9999]">
-        <Navbar />
-      </header>
 
-      <main className="flex-1 bg-base-200">
+      <div className="sticky top-0 z-[9999]">
+        <Navbar />
+      </div>
+
+      <main className="flex-1">
         <Outlet />
       </main>
 
-      <footer>
-        <Footer />
-      </footer>
+      <Footer />
     </div>
   );
 };

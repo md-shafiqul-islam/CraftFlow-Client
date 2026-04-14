@@ -1,36 +1,56 @@
-/* Google Inter Font */
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900&display=swap");
 
 @import "tailwindcss";
+
 @plugin "daisyui" {
-  themes: light --default;
+  themes:
+    dark --default,
+    light;
 }
 
-@plugin "daisyui/theme" {
-  name: "light";
-  default: true;
-
-  --color-primary: #1a237e;
-  --color-secondary: #f9a825;
-  --color-accent: #00acc1;
-  --text-accent: #1e293b;
-  --color-base-100: #ffffff;
-  --color-base-200: #f1f5f9;
-  --color-base-300: #e2e8f0;
-}
-
+/* 🌙 DARK THEME (CRAFTFLOW - SaaS STYLE) */
 @plugin "daisyui/theme" {
   name: "dark";
+  default: true;
 
-  --color-primary: #90caf9;
-  --color-secondary: #ffd54f;
-  --color-accent: #26c6da;
-  --text-accent: #f1f5f9;
-  --color-base-100: #0f172a;
-  --color-base-200: #1e293b;
-  --color-base-300: #334155;
+  /* 🎯 BRAND COLORS */
+  --color-primary: #6366f1; /* Indigo - SaaS core */
+  --color-secondary: #22c55e; /* Green - success / productivity */
+  --color-accent: #38bdf8; /* Sky blue - highlights */
+
+  /* 📝 TEXT */
+  --text-accent: #cbd5e1;
+
+  /* 🧱 BACKGROUNDS */
+  --color-base-100: #0b1220; /* main background */
+  --color-base-200: #111827; /* sections */
+  --color-base-300: #1f2937; /* cards */
+
+  /* optional but useful */
+  --color-neutral: #94a3b8;
 }
 
+/* ☀️ LIGHT THEME (MODERN CORPORATE UI) */
+@plugin "daisyui/theme" {
+  name: "light";
+
+  /* 🎯 BRAND */
+  --color-primary: #4f46e5; /* Indigo */
+  --color-secondary: #16a34a; /* Green */
+  --color-accent: #0ea5e9; /* Blue */
+
+  /* 📝 TEXT */
+  --text-accent: #334155;
+
+  /* 🧱 BACKGROUND */
+  --color-base-100: #ffffff;
+  --color-base-200: #f8fafc;
+  --color-base-300: #e2e8f0;
+
+  --color-neutral: #64748b;
+}
+
+/* 🌍 GLOBAL FONT */
 * {
   font-family: "Inter", sans-serif;
 }
