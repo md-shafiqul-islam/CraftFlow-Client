@@ -1,9 +1,9 @@
-# CraftFlow - Employee Management System
+# 🚀 CraftFlow – Employee Management System
 
 **Live Site URL:**  
-🌐 [https://craftflow-57fc0.web.app](https://craftflow-57fc0.web.app)
+🌐 [https://craft-flow.netlify.app/](https://craft-flow.netlify.app/)
 
-## 🧪 Admin Test Credentials
+## 🔐 Admin Login Credentials
 
 Email: admin@gmail.com  
 Password: A1234@
@@ -15,47 +15,38 @@ Password: A1234@
 ## 🔥 Key Features
 
 - ✅ **User Authentication (Email, Google & Role Selection)**
-
   - Supports registration via email/password and social login (Google).
   - Role selection at sign-up (Employee or HR only).
 
 - 🔐 **JWT-Protected Routes**
-
   - Backend APIs are protected using JWT.
   - Access is role-based: Employee, HR, or Admin.
 
 - 📝 **Task Submission & Management (Employee)**
-
   - Employees can log work hours with task name, date, and hours.
   - Tasks are editable and deletable.
 
 - 📋 **Employee List & Verification (HR)**
-
   - HR can view and verify employees.
   - Verified employees are eligible for salary payment.
 
 - 📅 **Work Record Filter (HR)**
-
   - Filter employee task records by name and month.
   - View total work hours for any month.
 
 - 💸 **Payroll Request (HR) & Payment (Admin)**
-
   - HR initiates salary requests for verified employees.
   - Admin views pending requests and approves payments via Stripe.
   - Prevents duplicate payment for the same month.
 
 - 🛑 **Fire or Promote Users (Admin)**
-
   - Admin can promote employees to HR.
   - Admin can fire (soft-disable) employees, preventing login access.
 
 - 📊 **Charts & Dashboards**
-
   - Salary payment and work log history shown via Recharts.
 
 - 🖼️ **Image Upload**
-
   - Profile photos uploaded to imgbb during registration.
 
 - ✨ **Sleek UI/UX**
@@ -107,4 +98,4 @@ Developed by Md. Shafiqul Islam
 
 ---
 
-Feel free to fork, clone, or contribute!
+# Feel free to fork, clone, or contribute!
