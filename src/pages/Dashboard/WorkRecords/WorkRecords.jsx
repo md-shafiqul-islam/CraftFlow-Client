@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
@@ -27,16 +27,16 @@ const WorkRecords = () => {
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [selectedMonth, setSelectedMonth] = useState("");
 
-  // Fetch employees for dropdown
+  // ================= EMPLOYEES =================
   const { data: employees = [], isLoading: employeesLoading } = useQuery({
     queryKey: ["employees"],
     queryFn: async () => {
       const res = await axiosSecure.get(`/users?role=Employee`);
-      return res.data;
+      return res.data || [];
     },
   });
 
-  // Fetch all work records from backend (no pagination on backend)
+  // ================= WORK RECORDS =================
   const {
     data: allRecords = [],
     isLoading: recordsLoading,
@@ -45,57 +45,72 @@ const WorkRecords = () => {
     queryKey: ["work-records"],
     queryFn: async () => {
       const res = await axiosSecure.get("/work-sheet");
-      return res.data;
+      return res.data || [];
     },
   });
 
-  // Filter work records based on employee and month filter
+  // ================= FILTERING =================
   const filteredRecords = useMemo(() => {
     return allRecords.filter((record) => {
-      const matchesEmployee =
+      const employeeMatch =
         !selectedEmployee || record.created_by === selectedEmployee;
-      const recordDate = new Date(record.date);
-      const recordMonth = recordDate.getMonth() + 1;
-      const matchesMonth =
+
+      const recordMonth = new Date(record.date).getMonth() + 1;
+
+      const monthMatch =
         !selectedMonth || Number(selectedMonth) === recordMonth;
-      return matchesEmployee && matchesMonth;
+
+      return employeeMatch && monthMatch;
     });
   }, [allRecords, selectedEmployee, selectedMonth]);
 
-  // Pagination logic
+  // ================= PAGINATION =================
   const totalPages = Math.ceil(filteredRecords.length / ITEMS_PER_PAGE);
 
-  // Paginated records for current page
   const paginatedRecords = useMemo(() => {
-    const startIndex = (page - 1) * ITEMS_PER_PAGE;
-    return filteredRecords.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    const start = (page - 1) * ITEMS_PER_PAGE;
+    return filteredRecords.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredRecords, page]);
 
-  // Total hours from filtered data
-  const totalHours = filteredRecords.reduce(
-    (sum, record) => sum + Number(record.hours || 0),
-    0
-  );
+  // ================= TOTAL HOURS =================
+  const totalHours = useMemo(() => {
+    return filteredRecords.reduce((sum, r) => sum + Number(r.hours || 0), 0);
+  }, [filteredRecords]);
 
-  // Reset page if filters change and current page exceeds total pages
+  // ================= RESET PAGE =================
   useEffect(() => {
     if (page > totalPages) setPage(1);
   }, [totalPages, page]);
 
-  return (
-    <section className="max-w-7xl mx-auto px-4 py-10">
-      <h2 className="text-2xl font-semibold mb-6 text-accent">
-        Employee Work Records
-      </h2>
+  // ================= UI STATES =================
+  if (recordsLoading || employeesLoading) {
+    return (
+      <div className="h-[60vh] flex items-center justify-center">
+        <span className="loading loading-spinner text-secondary"></span>
+      </div>
+    );
+  }
 
-      {/* Filters */}
-      <div className="flex flex-wrap gap-4 mb-6">
-        {/* Employee Select */}
+  return (
+    <section className="max-w-7xl mx-auto px-4 py-10 space-y-6">
+      {/* HEADER */}
+      <div>
+        <h2 className="text-2xl font-bold text-base-content">Work Records</h2>
+        <p className="text-sm text-base-content/60">
+          Track employee tasks and working hours
+        </p>
+      </div>
+
+      {/* FILTERS */}
+      <div className="flex flex-wrap gap-4">
+        {/* Employee Filter */}
         <select
           className="select select-bordered w-full sm:max-w-xs"
           value={selectedEmployee}
-          onChange={(e) => setSelectedEmployee(e.target.value)}
-          disabled={employeesLoading}
+          onChange={(e) => {
+            setSelectedEmployee(e.target.value);
+            setPage(1);
+          }}
         >
           <option value="">All Employees</option>
           {employees.map((emp) => (
@@ -105,64 +120,75 @@ const WorkRecords = () => {
           ))}
         </select>
 
-        {/* Month Select */}
+        {/* Month Filter */}
         <select
           className="select select-bordered w-full sm:max-w-xs"
           value={selectedMonth}
-          onChange={(e) => setSelectedMonth(e.target.value)}
+          onChange={(e) => {
+            setSelectedMonth(e.target.value);
+            setPage(1);
+          }}
         >
-          {monthOptions.map(({ value, label }) => (
-            <option key={value} value={value}>
-              {label}
+          {monthOptions.map((m) => (
+            <option key={m.value} value={m.value}>
+              {m.label}
             </option>
           ))}
         </select>
       </div>
 
-      {/* Total Hours */}
-      <div className="bg-base-100 p-4 rounded-md shadow mb-4">
-        <h3 className="text-lg font-semibold text-base-content/80">
+      {/* TOTAL HOURS CARD */}
+      <div className="bg-base-100 border border-base-300 p-4 rounded-xl shadow-sm">
+        <h3 className="text-lg font-semibold">
           Total Work Hours:{" "}
-          <span className="text-accent">{totalHours.toFixed(2)}</span>
+          <span className="text-primary font-bold">
+            {totalHours.toFixed(2)}
+          </span>
         </h3>
       </div>
 
-      {/* Table & Pagination */}
-      {recordsLoading ? (
-        <div className="text-center py-10">
-          <span className="loading loading-spinner text-secondary"></span>
-        </div>
-      ) : isError ? (
-        <div className="text-center text-error py-10">
+      {/* ERROR */}
+      {isError && (
+        <div className="text-center text-error">
           Failed to load work records.
         </div>
-      ) : paginatedRecords.length === 0 ? (
-        <p className="text-center text-base-content/60">No records found.</p>
-      ) : (
+      )}
+
+      {/* EMPTY STATE */}
+      {!isError && paginatedRecords.length === 0 && (
+        <div className="text-center text-base-content/60 py-10">
+          No work records found
+        </div>
+      )}
+
+      {/* TABLE */}
+      {!isError && paginatedRecords.length > 0 && (
         <>
-          <div className="overflow-x-auto bg-base-100 rounded-lg shadow">
-            <table className="table table-zebra w-full">
-              <thead>
+          <div className="overflow-x-auto bg-base-100 border border-base-300 rounded-xl shadow-sm">
+            <table className="table w-full">
+              <thead className="bg-base-200">
                 <tr>
                   <th>#</th>
-                  <th>Employee Name</th>
+                  <th>Employee</th>
                   <th>Date</th>
                   <th>Task</th>
                   <th>Hours</th>
                 </tr>
               </thead>
+
               <tbody>
                 {paginatedRecords.map((record, idx) => {
                   const emp = employees.find(
-                    (e) => (e.email || e._id) === record.created_by
+                    (e) => (e.email || e._id) === record.created_by,
                   );
+
                   return (
-                    <tr key={record._id || idx}>
+                    <tr key={record._id || idx} className="hover">
                       <td>{(page - 1) * ITEMS_PER_PAGE + idx + 1}</td>
-                      <td>{emp?.name || "Unknown"}</td>
+                      <td className="font-medium">{emp?.name || "Unknown"}</td>
                       <td>{new Date(record.date).toLocaleDateString()}</td>
                       <td>{record.task}</td>
-                      <td>{record.hours}</td>
+                      <td className="font-semibold">{record.hours}</td>
                     </tr>
                   );
                 })}
@@ -170,7 +196,7 @@ const WorkRecords = () => {
             </table>
           </div>
 
-          {/* Pagination */}
+          {/* PAGINATION */}
           {totalPages > 1 && (
             <div className="flex justify-center gap-2 mt-6">
               {Array.from({ length: totalPages }, (_, i) => (

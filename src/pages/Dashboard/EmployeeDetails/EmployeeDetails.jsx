@@ -8,9 +8,9 @@ import {
   Tooltip,
   CartesianGrid,
   ResponsiveContainer,
-  Legend,
   Cell,
 } from "recharts";
+
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const monthNames = [
@@ -28,7 +28,6 @@ const monthNames = [
   "Dec",
 ];
 
-// Predefined colors for bars
 const BAR_COLORS = [
   "#4ade80",
   "#60a5fa",
@@ -48,6 +47,7 @@ const EmployeeDetails = () => {
   const { employeeId } = useParams();
   const axiosSecure = useAxiosSecure();
 
+  // ================= FETCH =================
   const {
     data: employee,
     isLoading,
@@ -58,102 +58,136 @@ const EmployeeDetails = () => {
       const res = await axiosSecure.get(`/users/${employeeId}/details`);
       return res.data;
     },
+    enabled: !!employeeId,
   });
 
+  // ================= LOADING =================
   if (isLoading) {
     return (
-      <div className="h-screen flex items-center justify-center">
+      <div className="h-[60vh] flex items-center justify-center">
         <span className="loading loading-spinner text-secondary"></span>
       </div>
     );
   }
 
+  // ================= ERROR =================
   if (isError || !employee) {
     return (
-      <div className="p-10 text-center text-error">
-        Failed to fetch employee data.
+      <div className="h-[60vh] flex items-center justify-center text-error">
+        Failed to load employee details.
       </div>
     );
   }
 
-  const chartData = employee.salaryHistory
-    .map(({ month, year, salary }) => ({
-      name: `${monthNames[month - 1]} ${year}`,
-      salary,
-    }))
-    .reverse();
+  // ================= SAFE DATA =================
+  const salaryHistory = employee?.salaryHistory || [];
+
+  const chartData = salaryHistory.map((item) => ({
+    name: `${monthNames[item.month - 1] || "N/A"} ${item.year}`,
+    salary: Number(item.salary || 0),
+  }));
 
   const totalSalary = chartData.reduce((acc, cur) => acc + cur.salary, 0);
-  const avgSalary = (totalSalary / chartData.length).toFixed(2);
+
+  const avgSalary = chartData.length
+    ? (totalSalary / chartData.length).toFixed(2)
+    : 0;
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-10">
-      <h2 className="text-2xl font-semibold mb-6 text-accent">
-        Employee Salary Details
-      </h2>
+    <section className="max-w-7xl mx-auto px-4 py-10 space-y-6">
+      {/* HEADER */}
+      <div>
+        <h2 className="text-2xl font-bold text-base-content">
+          Employee Details
+        </h2>
+        <p className="text-sm text-base-content/60">
+          Salary analytics and performance overview
+        </p>
+      </div>
 
-      <div className="bg-base-100 rounded-lg shadow p-6">
-        {/* Profile Section */}
-        <div className="flex items-center gap-6 mb-8">
-          <img
-            src={employee.photo || "/default-avatar.png"}
-            alt={employee.name}
-            className="w-24 h-24 rounded-full object-cover border-2 border-secondary"
-          />
-          <div>
-            <h1 className="text-3xl font-semibold text-base-content">
-              {employee.name}
-            </h1>
-            <p className="text-base text-base-content/70">
-              {employee.designation}
-            </p>
-          </div>
-        </div>
+      {/* PROFILE CARD */}
+      <div className="bg-base-100 border border-base-300 rounded-xl shadow-sm p-6 flex items-center gap-6">
+        <img
+          src={employee.photo || "/default-avatar.png"}
+          alt={employee.name}
+          className="w-20 h-20 rounded-full object-cover border border-secondary"
+        />
 
-        {/* Bar Chart Section */}
-        {chartData.length === 0 ? (
-          <p className="text-center text-base-content/60">
-            No salary history available.
+        <div>
+          <h1 className="text-2xl font-semibold">{employee.name}</h1>
+
+          <p className="text-base-content/60">
+            {employee.designation || "No designation"}
           </p>
-        ) : (
-          <>
-            <ResponsiveContainer width="100%" height={400}>
+
+          <p className="text-sm text-base-content/50">{employee.email}</p>
+        </div>
+      </div>
+
+      {/* EMPTY STATE */}
+      {chartData.length === 0 ? (
+        <div className="text-center text-base-content/60 py-10">
+          No salary history available
+        </div>
+      ) : (
+        <>
+          {/* CHART */}
+          <div className="bg-base-100 border border-base-300 rounded-xl shadow-sm p-4">
+            <h3 className="text-lg font-semibold mb-4">Salary History</h3>
+
+            <ResponsiveContainer width="100%" height={350}>
               <BarChart
                 data={chartData}
-                margin={{ top: 20, right: 30, left: 0, bottom: 50 }}
+                margin={{
+                  top: 20,
+                  right: 20,
+                  left: 0,
+                  bottom: 40,
+                }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis
                   dataKey="name"
-                  angle={-30}
+                  angle={-25}
                   textAnchor="end"
-                  tick={{ fontSize: 12, fill: "#6b7280" }}
                   interval={0}
                 />
-                <YAxis tick={{ fontSize: 12, fill: "#6b7280" }} />
+                <YAxis />
                 <Tooltip />
-                <Bar dataKey="salary" radius={[6, 6, 0, 0]} barSize={40}>
-                  {chartData.map((entry, index) => (
+                <Bar dataKey="salary" radius={[6, 6, 0, 0]} barSize={35}>
+                  {chartData.map((_, index) => (
                     <Cell
-                      key={`cell-${index}`}
+                      key={index}
                       fill={BAR_COLORS[index % BAR_COLORS.length]}
                     />
                   ))}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
+          </div>
 
-            <div className="mt-6 flex flex-wrap justify-between items-center gap-4">
-              <div className="text-base-content/70 text-sm">
-                Total Salary: <span className="font-medium">{totalSalary}</span>
-                <br />
-                Avg Monthly Salary:{" "}
-                <span className="font-medium">{avgSalary}</span>
-              </div>
+          {/* STATS CARD */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-base-100 border border-base-300 rounded-xl p-4 shadow-sm">
+              <p className="text-sm text-base-content/60">
+                Total Salary Earned
+              </p>
+              <h4 className="text-xl font-bold text-primary">
+                {totalSalary.toLocaleString()}
+              </h4>
             </div>
-          </>
-        )}
-      </div>
+
+            <div className="bg-base-100 border border-base-300 rounded-xl p-4 shadow-sm">
+              <p className="text-sm text-base-content/60">
+                Average Monthly Salary
+              </p>
+              <h4 className="text-xl font-bold text-secondary">
+                {Number(avgSalary).toLocaleString()}
+              </h4>
+            </div>
+          </div>
+        </>
+      )}
     </section>
   );
 };
