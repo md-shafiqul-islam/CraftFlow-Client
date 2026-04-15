@@ -1,5 +1,9 @@
 # 🚀 CraftFlow – Employee Management System
 
+## 🚀 Project Description
+
+**CraftFlow** is a full-stack role-based employee management system that allows employees to log work hours, HRs to manage and verify users and initiate payrolls, and Admins to approve salary payments via Stripe. The app supports secure authentication with Firebase, protected routes with JWT, and real-time dashboard updates.
+
 **Live Site URL:**  
 🌐 [https://craft-flow.netlify.app/](https://craft-flow.netlify.app/)
 
@@ -7,10 +11,6 @@
 
 Email: admin@gmail.com  
 Password: A1234@
-
-## 🚀 Project Description
-
-**CraftFlow** is a full-stack role-based employee management system that allows employees to log work hours, HRs to manage and verify users and initiate payrolls, and Admins to approve salary payments via Stripe. The app supports secure authentication with Firebase, protected routes with JWT, and real-time dashboard updates.
 
 ## 🔥 Key Features
 
@@ -89,6 +89,30 @@ Password: A1234@
 
 - `client/` — React frontend with pages, layouts, components, hooks, and services
 - `server/` — Node.js backend with routes, controllers, middleware, and configs
+
+---
+
+---
+
+## Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/md-shafiqul-islam/CraftFlow-Client
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Start the Server
+
+```bash
+npm run dev
+```
 
 ---
 
