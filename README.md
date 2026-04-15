@@ -1,17 +1,24 @@
+```
 # 🚀 CraftFlow – Employee Management System
+```
 
+```
 ## 🚀 Project Description
-
 **CraftFlow** is a full-stack role-based employee management system that allows employees to log work hours, HRs to manage and verify users and initiate payrolls, and Admins to approve salary payments via Stripe. The app supports secure authentication with Firebase, protected routes with JWT, and real-time dashboard updates.
+```
 
+```
 **Live Site URL:**  
 🌐 [https://craft-flow.netlify.app/](https://craft-flow.netlify.app/)
+```
 
+```
 ## 🔐 Admin Login Credentials
-
 Email: admin@gmail.com  
 Password: A1234@
+```
 
+```
 ## 🔥 Key Features
 
 - ✅ **User Authentication (Email, Google & Role Selection)**
@@ -23,7 +30,7 @@ Password: A1234@
   - Access is role-based: Employee, HR, or Admin.
 
 - 📝 **Task Submission & Management (Employee)**
-  - Employees can log work hours with task name, date, and hours.
+  - Employees can log work hours with the task name, date, and hours.
   - Tasks are editable and deletable.
 
 - 📋 **Employee List & Verification (HR)**
@@ -47,11 +54,14 @@ Password: A1234@
   - Salary payment and work log history shown via Recharts.
 
 - 🖼️ **Image Upload**
-  - Profile photos uploaded to imgbb during registration.
+  - Profile photos uploaded to Imgbb during registration.
 
 - ✨ **Sleek UI/UX**
   - Dashboard styled with TailwindCSS, DaisyUI, SweetAlert2, and Lottie animations.
 
+```
+
+```
 ## 🧰 Tech Stack
 
 ### Frontend:
@@ -75,14 +85,16 @@ Password: A1234@
 - Stripe Payment Integration
 - CORS, dotenv
 - Hosted on Vercel
+```
 
+```
 ## 🛡️ Security
 
 - Firebase access token is retrieved on login and injected into Axios headers.
 - Role-based access control for all protected endpoints.
 - Token verification with Firebase Admin SDK and custom middleware.
 - Auto logout on token expiration or unauthorized access.
-
+```
 ---
 
 ### 📁 Folder Structure
@@ -91,6 +103,8 @@ Password: A1234@
 - `server/` — Node.js backend with routes, controllers, middleware, and configs
 
 ---
+
+# Feel free to fork, clone, or contribute!
 
 ---
 
@@ -114,12 +128,8 @@ npm install
 npm run dev
 ```
 
----
-
 ### 👨‍💻 Author
 
 Developed by Md. Shafiqul Islam
 
 ---
-
-# Feel free to fork, clone, or contribute!
