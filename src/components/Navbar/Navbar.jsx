@@ -50,7 +50,7 @@ const Navbar = () => {
           <div className="flex items-center gap-2">
             <button
               className="lg:hidden p-2 rounded-lg hover:bg-base-200"
-              onClick={() => setMenuOpen(true)}
+              onClick={() => setMenuOpen(!menuOpen)}
             >
               <Menu />
             </button>
@@ -115,7 +115,7 @@ const Navbar = () => {
 
       {/* ================= MOBILE DRAWER ================= */}
       <div
-        className={`fixed top-0 right-0 z-50 h-screen w-[80%] max-w-xs bg-base-100 shadow-2xl transform transition-transform duration-300 ${
+        className={`fixed top-0 right-0 z-50 h-full w-72 max-w-xs bg-base-100 shadow-2xl transform transition-transform duration-300 ${
           menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >

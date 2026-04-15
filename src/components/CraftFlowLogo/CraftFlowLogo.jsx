@@ -3,19 +3,33 @@ import logo from "../../assets/Logo/craft-flow-logo.png";
 
 const CraftFlowLogo = () => {
   return (
-    <div>
-      <Link to="/" className="flex justify-center items-center gap-2">
+    <Link
+      to="/"
+      className="group flex items-center gap-2 select-none"
+      aria-label="Go to homepage"
+    >
+      {/* Logo Image */}
+      <div className="relative">
         <img
-          className="w-10 h-10 cursor-pointer"
           src={logo}
-          alt="Craft-Flow Logo"
+          alt="CraftFlow Logo"
+          className="w-9 h-9 sm:w-10 sm:h-10 object-contain transition-transform duration-300 group-hover:scale-105"
         />
-        <h1 className="text-xl font-extrabold select-none tracking-wide">
-          <span className="text-primary">Craft</span>
-          <span className="text-secondary">Flow</span>
-        </h1>
-      </Link>
-    </div>
+
+        {/* subtle glow */}
+        <div className="absolute inset-0 rounded-full bg-primary/10 blur-md opacity-0 group-hover:opacity-100 transition duration-300" />
+      </div>
+
+      {/* Text */}
+      <h1 className="text-lg sm:text-xl font-extrabold tracking-wide leading-none">
+        <span className="text-primary transition-colors duration-300 group-hover:text-secondary">
+          Craft
+        </span>
+        <span className="text-secondary transition-colors duration-300 group-hover:text-primary">
+          Flow
+        </span>
+      </h1>
+    </Link>
   );
 };
 

@@ -19,6 +19,7 @@ const Login = () => {
   const { loginUser } = useAuth();
   const location = useLocation();
   const axiosInstance = useAxios();
+
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -32,14 +33,17 @@ const Login = () => {
       await axiosInstance.post("login-check", { email });
 
       await loginUser(email, password);
+
       toast.dismiss(toastId);
+
       Swal.fire({
         icon: "success",
-        title: "Login Successful",
-        text: "You have logged in successfully!",
+        title: "Welcome Back 👋",
+        text: "Login successful!",
         timer: 2000,
         showConfirmButton: false,
       });
+
       navigate(location?.state || "/");
     } catch (error) {
       toast.dismiss(toastId);
@@ -50,8 +54,8 @@ const Login = () => {
           title: "Access Denied",
           text:
             error.response?.data?.message ||
-            "You are not allowed to log in. Contact the Admin.",
-          confirmButtonColor: "#1a237e",
+            "You are not allowed to log in. Contact Admin.",
+          confirmButtonColor: "#d33",
         });
       }
 
@@ -59,6 +63,7 @@ const Login = () => {
         "auth/invalid-credential": "Incorrect email or password.",
         "auth/invalid-email": "Please enter a valid email address.",
       };
+
       const message =
         errorMap[error.code] ||
         error.message ||
@@ -76,37 +81,35 @@ const Login = () => {
   };
 
   return (
-    <section className="flex items-center justify-center w-full">
-      <div className="bg-base-100 p-10 rounded-xl shadow-xl w-full max-w-xl">
-        {/* Heading */}
+    <section className="flex items-center justify-center w-full px-4">
+      <div className="w-full max-w-md bg-base-100 border border-base-300 rounded-2xl shadow-lg p-8 md:p-10">
+        {/* 🔥 Header */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
-            <span className="text-primary">Welcome</span>{" "}
-            <span className="text-secondary">Back</span>
+          <h2 className="text-3xl font-bold mb-2">
+            Welcome to <span className="text-primary">Craft</span>
+            <span className="text-secondary">Flow</span>
           </h2>
-          <p className="text-sm text-text-accent">Please sign in to continue</p>
+          <p className="text-sm text-base-content/70">
+            Sign in to manage your workspace 🚀
+          </p>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit(handleLogin)} className="space-y-6">
+        {/* 🔥 Form */}
+        <form onSubmit={handleSubmit(handleLogin)} className="space-y-5">
           {/* Email */}
           <div>
-            <label
-              className="block mb-1 font-medium text-sm text-accent"
-              htmlFor="email"
-            >
-              Email
+            <label className="text-sm font-medium text-base-content">
+              Email Address
             </label>
             <input
-              id="email"
               type="email"
-              placeholder="Enter your email"
+              placeholder="you@example.com"
               autoComplete="username"
-              className="input input-bordered input-secondary text-secondary w-full"
+              className="input input-bordered w-full mt-1 focus:outline-none focus:border-primary"
               {...register("email", { required: "Email is required" })}
             />
             {errors.email && (
-              <p className="text-sm text-red-500 mt-1">
+              <p className="text-red-500 text-xs mt-1">
                 {errors.email.message}
               </p>
             )}
@@ -114,33 +117,32 @@ const Login = () => {
 
           {/* Password */}
           <div>
-            <label
-              className="block mb-1 font-medium text-sm text-accent"
-              htmlFor="password"
-            >
+            <label className="text-sm font-medium text-base-content">
               Password
             </label>
-            <div className="relative">
+
+            <div className="relative mt-1">
               <input
-                id="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
+                placeholder="Enter password"
                 autoComplete="current-password"
-                className="input input-bordered input-secondary text-secondary w-full"
+                className="input input-bordered w-full pr-10 focus:outline-none focus:border-primary"
                 {...register("password", {
                   required: "Password is required",
                 })}
               />
 
-              <div
-                className="absolute top-1/2 -translate-y-1/2 right-3 z-50 cursor-pointer text-secondary"
+              <button
+                type="button"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/60 hover:text-primary"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? <Eye /> : <EyeOff />}
-              </div>
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
+
             {errors.password && (
-              <p className="text-sm text-red-500 mt-1">
+              <p className="text-red-500 text-xs mt-1">
                 {errors.password.message}
               </p>
             )}
@@ -149,34 +151,35 @@ const Login = () => {
           {/* Submit */}
           <button
             type="submit"
-            className="btn btn-primary text-secondary w-full"
             disabled={isLoading}
+            className="btn w-full bg-primary text-white hover:bg-secondary transition-all duration-300 disabled:opacity-70"
           >
             {isLoading ? (
-              <span className="loading loading-spinner text-secondary"></span>
+              <span className="loading loading-spinner"></span>
             ) : (
               "Login"
             )}
           </button>
         </form>
 
-        {/* Forget Password */}
-        <div className="mt-1">
-          <Link className="font-medium text-sm text-accent hover:underline">
-            Forget Password?
-          </Link>
+        {/* Divider */}
+        <div className="divider text-xs text-base-content/50 my-6">
+          OR CONTINUE WITH
         </div>
 
-        {/* Link to Register */}
-        <p className="mt-6 text-center text-sm text-text-accent">
+        {/* Social Login */}
+        <SocialLogin />
+
+        {/* Register */}
+        <p className="text-center text-sm text-base-content/70 mt-6">
           Don’t have an account?{" "}
-          <Link to="/register" className="text-secondary font-medium btn-link">
-            Register here
+          <Link
+            to="/register"
+            className="text-secondary font-medium hover:underline"
+          >
+            Create one
           </Link>
         </p>
-
-        {/* SocialLogin */}
-        <SocialLogin />
       </div>
     </section>
   );

@@ -2,7 +2,7 @@ import Swal from "sweetalert2";
 import useAuth from "../../hooks/useAuth";
 import { Link, useNavigate } from "react-router";
 import { useState, useRef, useEffect } from "react";
-import { LogOut, User, LayoutDashboard } from "lucide-react";
+import { LogOut, LayoutDashboard } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 
@@ -14,7 +14,7 @@ const UserMenu = () => {
   const axiosSecure = useAxiosSecure();
 
   const { data: userInfo } = useQuery({
-    queryKey: ["user", user.email],
+    queryKey: ["user", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
       const res = await axiosSecure.get(`/users/me?email=${user.email}`);
@@ -24,39 +24,34 @@ const UserMenu = () => {
 
   const handleLogout = async () => {
     const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "Do you really want to logout?",
+      title: "Logout?",
+      text: "You will be signed out of your account.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#1a237e",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, logout!",
+      confirmButtonText: "Yes, Logout",
       cancelButtonText: "Cancel",
+      confirmButtonColor: "#ef4444",
     });
 
     if (!result.isConfirmed) return;
 
     try {
       await logoutUser();
+
       Swal.fire({
         icon: "success",
-        title: "Logged Out",
-        text: "You have been logged out successfully.",
-        timer: 2000,
+        title: "Logged out",
+        timer: 1500,
         showConfirmButton: false,
       });
+
       navigate("/login");
     } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Logout Failed",
-        text: error?.message || "Something went wrong. Please try again.",
-        confirmButtonColor: "#d33",
-      });
+      Swal.fire("Error", error?.message || "Logout failed", "error");
     }
   };
 
-  // Close dropdown on outside click
+  // 🔒 Close on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -71,69 +66,80 @@ const UserMenu = () => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Avatar */}
-      <img
-        src={user?.photoURL || "https://i.pravatar.cc/100?u=default"}
-        alt="User Avatar"
-        className="w-10 h-10 rounded-full object-cover border border-secondary cursor-pointer"
-        onClick={() => setOpen(!open)}
-        title="Account Menu"
-        role="button"
-        aria-label="Toggle user menu"
-      />
+      {/* 🔥 Avatar */}
+      <button onClick={() => setOpen(!open)} className="relative">
+        <img
+          src={user?.photoURL || "https://i.pravatar.cc/100?u=default"}
+          alt="User Avatar"
+          className="w-10 h-10 rounded-full object-cover border-2 border-secondary hover:scale-105 transition"
+        />
 
-      {/* Dropdown */}
-      {open && (
-        <div className="absolute right-0 mt-3 w-64 bg-base-300 shadow-lg border border-base-300 rounded-xl z-50 p-4 text-sm space-y-3">
-          {/* User Info */}
-          <div className="flex items-center gap-3 border-b pb-3">
+        {/* online dot */}
+        <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-base-100 rounded-full"></span>
+      </button>
+
+      {/* 🔥 Dropdown */}
+      <div
+        className={`absolute right-0 mt-3 w-72 origin-top-right transition-all duration-200 ${
+          open
+            ? "opacity-100 scale-100 visible"
+            : "opacity-0 scale-95 invisible"
+        }`}
+      >
+        <div className="bg-base-100 border border-base-300 rounded-2xl shadow-xl overflow-hidden">
+          {/* 👤 USER INFO */}
+          <div className="px-5 py-4 border-b border-base-300 flex items-center gap-3">
             <img
               src={user.photoURL || "https://i.pravatar.cc/100?u=default"}
-              alt="User Avatar"
-              className="w-10 h-10 rounded-full object-cover border border-secondary"
+              className="w-12 h-12 rounded-full object-cover"
+              alt=""
             />
-            <div>
-              <p className="font-semibold text-accent">
-                {user.displayName || "User Name"}
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-base-content truncate">
+                {user.displayName || "User"}
               </p>
-              <p className="text-xs text-text-accent truncate">{user.email}</p>
-              {userInfo.role && (
-                <span className="text-[10px] bg-secondary text-white px-2 py-0.5 rounded mt-1 inline-block">
+              <p className="text-xs text-base-content/60 truncate">
+                {user.email}
+              </p>
+
+              {userInfo?.role && (
+                <span className="inline-block mt-1 text-[10px] px-2 py-0.5 rounded-full bg-secondary/10 text-secondary font-medium">
                   {userInfo.role}
                 </span>
               )}
             </div>
           </div>
 
-          {/* Navigation Options */}
-          <div className="space-y-2">
+          {/* 📌 MENU */}
+          <div className="p-2 space-y-1">
             <Link
               to="/dashboard"
-              className="flex items-center gap-2 hover:bg-base-200 px-3 py-2 rounded-md transition"
               onClick={() => setOpen(false)}
+              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-base-200 transition"
             >
-              <LayoutDashboard size={16} />
-              Dashboard
+              <LayoutDashboard size={18} />
+              <span className="text-sm">Dashboard</span>
             </Link>
           </div>
 
-          {/* Divider */}
-          <hr className="border-base-200" />
+          {/* 🔻 DIVIDER */}
+          <div className="border-t border-base-300" />
 
-          {/* Logout */}
-          <button
-            onClick={() => {
-              setOpen(false);
-              handleLogout();
-            }}
-            type="button"
-            className="flex items-center gap-2 px-3 py-2 text-red-600 hover:bg-base-100 rounded-md w-full transition cursor-pointer"
-          >
-            <LogOut size={16} />
-            Logout
-          </button>
+          {/* 🚪 LOGOUT */}
+          <div className="p-2">
+            <button
+              onClick={() => {
+                setOpen(false);
+                handleLogout();
+              }}
+              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-red-500 hover:bg-red-50 transition"
+            >
+              <LogOut size={18} />
+              <span className="text-sm font-medium">Logout</span>
+            </button>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

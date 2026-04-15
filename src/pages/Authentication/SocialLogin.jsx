@@ -6,27 +6,29 @@ import { useLocation, useNavigate } from "react-router";
 import { useState } from "react";
 import useAxios from "../../hooks/useAxios";
 
+/* 🧠 Smart Designation Generator (Employee System) */
 const getRandomDesignation = () => {
   const roles = [
-    "Interior Designer",
-    "Project Manager",
-    "Site Supervisor",
-    "Draftsman",
-    "3D Visualizer",
-    "Lighting Consultant",
-    "Procurement Officer",
-    "Renovation Specialist",
-    "Furniture Designer",
-    "Client Coordinator",
+    "Software Engineer",
+    "HR Executive",
+    "Frontend Developer",
+    "Backend Developer",
+    "UI/UX Designer",
+    "QA Engineer",
+    "DevOps Engineer",
+    "Product Manager",
+    "Support Executive",
+    "Data Analyst",
   ];
   return roles[Math.floor(Math.random() * roles.length)];
 };
 
+/* 🏦 Bank Account Generator */
 const generateBankAccountNumber = () => {
-  const randomDigits = Array.from({ length: 9 }, () =>
-    Math.floor(Math.random() * 10)
+  const randomDigits = Array.from({ length: 10 }, () =>
+    Math.floor(Math.random() * 10),
   ).join("");
-  return `0009-${randomDigits}`;
+  return `CF-${randomDigits}`;
 };
 
 const SocialLogin = () => {
@@ -38,23 +40,23 @@ const SocialLogin = () => {
 
   const handleGoogleLogin = async () => {
     setIsLoading(true);
-    const toastId = toast.loading("Signing in with Google...");
+    const toastId = toast.loading("Connecting to Google...");
 
     try {
       const result = await loginWithGoogle();
       const user = result.user;
 
-      // Save user info in database
       const userInfo = {
         name: user?.displayName,
         email: user?.email,
         role: "Employee",
         designation: getRandomDesignation(),
         bank_account_no: generateBankAccountNumber(),
-        salary: 35000,
+        salary: 30000 + Math.floor(Math.random() * 20000),
         photo: user?.photoURL,
         status: "active",
         isVerified: false,
+        created_at: new Date(),
       };
 
       try {
@@ -62,18 +64,19 @@ const SocialLogin = () => {
 
         Swal.fire({
           icon: "success",
-          title: "Registration Successful",
-          text: `Welcome, ${user.displayName || "User"}!`,
+          title: "Welcome to CraftFlow 🎉",
+          text: `Account created successfully for ${
+            user.displayName || "User"
+          }`,
           timer: 2000,
           showConfirmButton: false,
         });
       } catch (postError) {
         if (postError.response?.status === 409) {
-          // User already exists - treat as login success
           Swal.fire({
             icon: "success",
-            title: "Login Successful",
-            text: `Welcome back, ${user.displayName || "User"}!`,
+            title: "Welcome Back 👋",
+            text: `Logged in as ${user.displayName || "User"}`,
             timer: 2000,
             showConfirmButton: false,
           });
@@ -83,29 +86,27 @@ const SocialLogin = () => {
       }
 
       toast.dismiss(toastId);
-      navigate(location?.state || "/");
+      navigate(location?.state || "/dashboard");
     } catch (error) {
       toast.dismiss(toastId);
 
       const errorMap = {
-        "auth/invalid-credential": "Invalid credentials. Please try again.",
-        "auth/popup-closed-by-user":
-          "Google popup was closed before completing.",
-        "auth/cancelled-popup-request": "Another login request is in progress.",
-        "auth/popup-blocked":
-          "Popup was blocked by your browser. Please allow it.",
+        "auth/invalid-credential": "Invalid credentials.",
+        "auth/popup-closed-by-user": "Login cancelled.",
+        "auth/cancelled-popup-request": "Another login is in progress.",
+        "auth/popup-blocked": "Popup blocked. Please allow popups.",
         "auth/network-request-failed":
-          "Network error. Please check your connection.",
+          "Network error. Check your internet connection.",
       };
 
       const message =
         errorMap[error.code] ||
         error.message ||
-        "Google login failed. Please try again.";
+        "Google login failed. Try again.";
 
       Swal.fire({
         icon: "error",
-        title: "Google Login Failed",
+        title: "Login Failed",
         text: message,
         confirmButtonColor: "#d33",
       });
@@ -115,21 +116,33 @@ const SocialLogin = () => {
   };
 
   return (
-    <div className="text-center mt-6">
+    <div className="mt-6 space-y-4">
+      {/* Divider */}
+      <div className="flex items-center gap-3">
+        <div className="flex-1 h-[1px] bg-base-300"></div>
+        <div className="flex-1 h-[1px] bg-base-300"></div>
+      </div>
+
+      {/* Google Button */}
       <button
         onClick={handleGoogleLogin}
-        className="btn btn-outline w-full flex items-center justify-center gap-3 hover:shadow-md transition"
         disabled={isLoading}
+        className="btn w-full bg-base-100 border border-base-300 hover:border-secondary hover:shadow-md transition-all flex items-center justify-center gap-3"
       >
         {isLoading ? (
           <span className="loading loading-spinner text-secondary"></span>
         ) : (
           <>
             <FcGoogle size={20} />
-            <span>Continue with Google</span>
+            <span className="font-medium">Continue with Google</span>
           </>
         )}
       </button>
+
+      {/* Small Note */}
+      <p className="text-xs text-center text-base-content/50">
+        Quick access for employees and HR — no manual signup needed.
+      </p>
     </div>
   );
 };
