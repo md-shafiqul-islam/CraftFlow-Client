@@ -5,12 +5,12 @@ import ScrollToTop from "../components/ScrollToTop/ScrollToTop";
 
 const RootLayout = () => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-base-200">
       <ScrollToTop />
 
-      <div className="sticky top-0 z-[9999]">
-        <Navbar />
-      </div>
+      <Navbar />
+
+      <div className="h-[64px]" />
 
       <main className="flex-1">
         <Outlet />

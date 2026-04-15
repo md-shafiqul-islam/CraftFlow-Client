@@ -13,24 +13,20 @@ const Navbar = () => {
   const { theme, toggleTheme } = use(ThemeContext);
   const { user } = useAuth();
 
-  // 🔒 Lock scroll
+  // 🔒 Lock scroll when menu open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "auto";
-    return () => (document.body.style.overflow = "auto");
   }, [menuOpen]);
 
   // 📌 Scroll detection
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 10);
     handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const commonNavItems = [
+  const navItems = [
     { name: "Home", path: "/" },
     { name: "Use Cases", path: "/use-cases" },
     { name: "Support", path: "/support" },
@@ -43,71 +39,64 @@ const Navbar = () => {
     <>
       {/* ================= NAVBAR ================= */}
       <nav
-        className={`sticky top-0 z-[9999] w-full transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? "bg-base-100/95 backdrop-blur-xl shadow-md border-base-300"
-            : "bg-base-100/70 backdrop-blur-md"
+            ? "bg-base-100/95 backdrop-blur-xl shadow-md"
+            : "bg-base-100/80 backdrop-blur-md"
         }`}
       >
         <div className="flex items-center justify-between px-4 py-3 max-w-7xl mx-auto">
           {/* LEFT */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <button
-              className="lg:hidden p-2 rounded-lg hover:bg-base-200 transition"
+              className="lg:hidden p-2 rounded-lg hover:bg-base-200"
               onClick={() => setMenuOpen(true)}
             >
               <Menu />
             </button>
 
-            {/* ✅ Logo ONLY for desktop */}
+            {/* Logo only desktop */}
             <div className="hidden lg:block">
               <CraftFlowLogo />
             </div>
           </div>
 
-          {/* CENTER */}
+          {/* CENTER (Desktop) */}
           <ul className="hidden lg:flex items-center gap-8">
-            {commonNavItems.map((item) => (
+            {navItems.map((item) => (
               <li key={item.name}>
                 <NavLink
                   to={item.path}
                   className={({ isActive }) =>
-                    `relative text-sm font-medium transition ${
+                    `text-sm font-medium transition ${
                       isActive
                         ? "text-secondary"
                         : "text-base-content/70 hover:text-secondary"
                     }`
                   }
                 >
-                  {({ isActive }) => (
-                    <>
-                      {item.name}
-                      <span
-                        className={`absolute left-0 -bottom-1 h-[2px] bg-secondary transition-all duration-300 ${
-                          isActive ? "w-full" : "w-0"
-                        }`}
-                      />
-                    </>
-                  )}
+                  {item.name}
                 </NavLink>
               </li>
             ))}
           </ul>
 
           {/* RIGHT */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Theme */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-full hover:bg-base-200 transition"
+              className="p-2 rounded-full hover:bg-base-200"
             >
               {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
             </button>
 
+            {/* Auth */}
             {user ? (
               <UserMenu />
             ) : (
               <Link to="/login">
-                <button className="px-4 py-2 rounded-lg bg-secondary text-base-100 font-medium hover:opacity-90 transition">
+                <button className="px-3 sm:px-4 py-2 text-sm rounded-lg bg-secondary text-white font-medium hover:opacity-90 transition">
                   Login
                 </button>
               </Link>
@@ -126,33 +115,33 @@ const Navbar = () => {
 
       {/* ================= MOBILE DRAWER ================= */}
       <div
-        className={`fixed top-0 left-0 z-50 h-screen w-72 bg-base-100 border-r border-base-300 shadow-xl transform transition-transform duration-300 ${
-          menuOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 right-0 z-50 h-screen w-[80%] max-w-xs bg-base-100 shadow-2xl transform transition-transform duration-300 ${
+          menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
-          {/* ✅ HEADER (NO LOGO) */}
+          {/* HEADER */}
           <div className="flex justify-end p-4 border-b border-base-300">
             <button
               onClick={() => setMenuOpen(false)}
-              className="p-2 rounded-md hover:bg-base-200 transition"
+              className="p-2 rounded-md hover:bg-base-200"
             >
               <X size={22} />
             </button>
           </div>
 
           {/* NAV ITEMS */}
-          <div className="flex flex-col gap-2 p-4 flex-1">
-            {commonNavItems.map((item) => (
+          <div className="flex flex-col gap-2 p-4 flex-1 overflow-y-auto">
+            {navItems.map((item) => (
               <NavLink
                 key={item.name}
                 to={item.path}
                 onClick={() => setMenuOpen(false)}
                 className={({ isActive }) =>
-                  `px-4 py-3 rounded-lg text-sm font-medium transition ${
+                  `px-4 py-3 rounded-lg text-sm ${
                     isActive
                       ? "bg-secondary/10 text-secondary"
-                      : "text-base-content/70 hover:bg-base-200 hover:text-secondary"
+                      : "text-base-content/70 hover:bg-base-200"
                   }`
                 }
               >
@@ -161,11 +150,11 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* FOOTER */}
+          {/* 🔥 LOGIN ALWAYS VISIBLE */}
           {!user && (
-            <div className="p-4 border-t border-base-300">
+            <div className="p-4 border-t border-base-300 bg-base-100">
               <Link to="/login" onClick={() => setMenuOpen(false)}>
-                <button className="w-full py-3 rounded-lg bg-secondary text-base-100 font-medium">
+                <button className="w-full py-3 rounded-lg bg-secondary text-white font-medium">
                   Login
                 </button>
               </Link>
