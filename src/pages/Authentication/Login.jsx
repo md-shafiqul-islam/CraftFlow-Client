@@ -13,7 +13,12 @@ const Login = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      email: "admin@gmail.com",
+      password: "A1234@",
+    },
+  });
 
   const navigate = useNavigate();
   const { loginUser } = useAuth();
