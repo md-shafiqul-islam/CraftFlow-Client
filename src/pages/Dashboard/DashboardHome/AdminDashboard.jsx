@@ -21,12 +21,13 @@ import { Link } from "react-router";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
 
-const COLORS = ["#3b82f6", "#ec4899"];
+const COLORS = ["#6366f1", "#ec4899"];
 
 const AdminDashboard = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
 
+  // ---------------- USERS ----------------
   const { data: users = [], isLoading: loadingUsers } = useQuery({
     queryKey: ["verifiedUsers"],
     queryFn: async () => {
@@ -35,6 +36,7 @@ const AdminDashboard = () => {
     },
   });
 
+  // ---------------- PAYMENTS ----------------
   const { data: payments = [], isLoading: loadingPayments } = useQuery({
     queryKey: ["all-payments"],
     queryFn: async () => {
@@ -43,6 +45,7 @@ const AdminDashboard = () => {
     },
   });
 
+  // ---------------- MESSAGES ----------------
   const { data: messages = [], isLoading: loadingMessages } = useQuery({
     queryKey: ["adminMessages"],
     queryFn: async () => {
@@ -51,27 +54,28 @@ const AdminDashboard = () => {
     },
   });
 
-  const totalEmployees = users.filter(
-    (u) => u.role === "Employee" && u.status === "active"
+  // ---------------- METRICS ----------------
+  const totalEmployees = users?.filter(
+    (u) => u.role === "Employee" && u.status === "active",
   ).length;
 
-  const totalHRs = users.filter(
-    (u) => u.role === "HR" && u.status === "active"
+  const totalHRs = users?.filter(
+    (u) => u.role === "HR" && u.status === "active",
   ).length;
 
-  const totalPendingPayroll = payments.filter(
-    (p) => p.paymentStatus === "pending"
+  const totalPendingPayroll = payments?.filter(
+    (p) => p.paymentStatus === "pending",
   ).length;
 
-  const totalCompletedPayroll = payments.filter(
-    (p) => p.paymentStatus === "completed"
+  const totalCompletedPayroll = payments?.filter(
+    (p) => p.paymentStatus === "completed",
   ).length;
 
-  const totalMessages = messages.length;
+  const totalMessages = messages?.length;
 
   const pieData = [
-    { name: "Employees", value: totalEmployees },
-    { name: "HRs", value: totalHRs },
+    { name: "Employees", value: totalEmployees || 0 },
+    { name: "HR", value: totalHRs || 0 },
   ];
 
   const salaryData = [
@@ -82,74 +86,63 @@ const AdminDashboard = () => {
     { month: "May", total: 20000 },
   ];
 
-  if (loadingUsers || loadingPayments || loadingMessages) {
+  const isLoading = loadingUsers || loadingPayments || loadingMessages;
+
+  if (isLoading) {
     return (
-      <div className="p-10 text-center text-lg">
-        <span className="loading loading-spinner text-secondary mx-auto"></span>
+      <div className="flex items-center justify-center h-96">
+        <span className="loading loading-spinner text-secondary"></span>
       </div>
     );
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-10 space-y-8">
-      <h2 className="text-2xl font-bold text-accent">
-        Welcome, {user?.displayName || "Employee"}
-      </h2>
-
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-        <SummaryCard
-          label="Total Employees"
-          count={totalEmployees}
-          icon={<FaUsers />}
-          color="bg-primary"
-        />
-        <SummaryCard
-          label="Total HRs"
-          count={totalHRs}
-          icon={<FaUserShield />}
-          color="bg-secondary"
-        />
-        <SummaryCard
-          label="Pending Payroll"
-          count={totalPendingPayroll}
-          icon={<FaMoneyCheckAlt />}
-          color="bg-warning"
-        />
-        <SummaryCard
-          label="Completed Payroll"
-          count={totalCompletedPayroll}
-          icon={<FaCheckCircle />}
-          color="bg-success"
-        />
-        <SummaryCard
-          label="Messages"
-          count={totalMessages}
-          icon={<FaEnvelope />}
-          color="bg-accent"
-        />
+    <section className="max-w-7xl mx-auto px-4 py-8 space-y-10">
+      {/* ================= HEADER ================= */}
+      <div>
+        <h2 className="text-2xl md:text-3xl font-bold text-base-content">
+          Welcome back,{" "}
+          <span className="text-primary">{user?.displayName || "Admin"}</span>
+        </h2>
+        <p className="text-base-content/60 text-sm mt-1">
+          Here’s your system overview and performance summary
+        </p>
       </div>
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-base-200 p-4 shadow-md rounded-xl">
-          <h2 className="text-lg font-semibold mb-4">Role Distribution</h2>
-          <ResponsiveContainer width="100%" height={250}>
+      {/* ================= KPI CARDS ================= */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <KpiCard label="Employees" value={totalEmployees} icon={<FaUsers />} />
+        <KpiCard label="HR Team" value={totalHRs} icon={<FaUserShield />} />
+        <KpiCard
+          label="Pending Payroll"
+          value={totalPendingPayroll}
+          icon={<FaMoneyCheckAlt />}
+        />
+        <KpiCard
+          label="Completed Payroll"
+          value={totalCompletedPayroll}
+          icon={<FaCheckCircle />}
+        />
+        <KpiCard label="Messages" value={totalMessages} icon={<FaEnvelope />} />
+      </div>
+
+      {/* ================= CHARTS ================= */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* PIE CHART */}
+        <div className="bg-base-100 border border-base-300 rounded-xl p-5">
+          <h3 className="text-lg font-semibold mb-4">Role Distribution</h3>
+
+          <ResponsiveContainer width="100%" height={260}>
             <PieChart>
               <Pie
                 data={pieData}
                 dataKey="value"
                 nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={80}
+                outerRadius={90}
                 label
               >
-                {pieData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
+                {pieData.map((_, index) => (
+                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip />
@@ -157,53 +150,54 @@ const AdminDashboard = () => {
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-base-200 p-4 shadow-md rounded-xl">
-          <h2 className="text-lg font-semibold mb-4">Monthly Salary Expense</h2>
-          <ResponsiveContainer width="100%" height={250}>
+        {/* BAR CHART */}
+        <div className="bg-base-100 border border-base-300 rounded-xl p-5">
+          <h3 className="text-lg font-semibold mb-4">Monthly Salary Expense</h3>
+
+          <ResponsiveContainer width="100%" height={260}>
             <BarChart data={salaryData}>
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="total" fill="#6366f1" barSize={40} />
+              <Bar dataKey="total" fill="#6366f1" barSize={35} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* Navigation Buttons */}
+      {/* ================= QUICK ACTIONS ================= */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <LinkButton
-          to="/dashboard/all-employee-list"
-          label="Manage Employees"
-        />
-        <LinkButton to="/dashboard/payroll" label="View Payroll" />
-        <LinkButton to="/dashboard/messages" label="Messages" />
+        <ActionButton to="/dashboard/all-employee-list">
+          Manage Employees
+        </ActionButton>
+        <ActionButton to="/dashboard/payroll">Payroll System</ActionButton>
+        <ActionButton to="/dashboard/messages">View Messages</ActionButton>
       </div>
     </section>
   );
 };
 
-function SummaryCard({ label, count, icon, color }) {
+export default AdminDashboard;
+
+/* ================= KPI CARD ================= */
+function KpiCard({ label, value, icon }) {
   return (
-    <div
-      className={`shadow-md ${color} text-white p-6 rounded-lg flex flex-col items-center justify-center`}
-    >
-      <div className="text-2xl">{icon}</div>
-      <p className="text-2xl font-bold">{count}</p>
-      <p className="text-sm opacity-90">{label}</p>
+    <div className="bg-base-100 border border-base-300 rounded-xl p-5 flex flex-col gap-2 hover:shadow-md transition">
+      <div className="text-secondary text-xl">{icon}</div>
+      <h3 className="text-2xl font-bold">{value || 0}</h3>
+      <p className="text-sm text-base-content/60">{label}</p>
     </div>
   );
 }
 
-function LinkButton({ to, label }) {
+/* ================= ACTION BUTTON ================= */
+function ActionButton({ to, children }) {
   return (
     <Link
       to={to}
-      className="btn bg-accent rounded-full text-lg w-full transition-all duration-300 text-center text-white"
+      className="btn bg-secondary text-base-100 hover:opacity-90 w-full rounded-lg"
     >
-      {label}
+      {children}
     </Link>
   );
 }
-
-export default AdminDashboard;

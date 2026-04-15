@@ -4,6 +4,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 const Messages = () => {
   const axiosSecure = useAxiosSecure();
 
+  // ================= FETCH MESSAGES =================
   const {
     data: messages = [],
     isLoading,
@@ -16,37 +17,62 @@ const Messages = () => {
     },
   });
 
-  return (
-    <section className="max-w-7xl mx-auto px-4 py-10">
-      <h2 className="text-2xl font-semibold mb-6 text-accent">User Messages</h2>
+  const isEmpty = !messages || messages.length === 0;
 
-      {isError ? (
-        <p className="text-center text-error">Failed to load messages.</p>
-      ) : isLoading ? (
-        <div className="flex justify-center">
+  return (
+    <section className="max-w-6xl mx-auto px-4 py-8 space-y-6">
+      {/* ================= HEADER ================= */}
+      <div>
+        <h2 className="text-2xl font-bold text-base-content">Messages Inbox</h2>
+        <p className="text-sm text-base-content/60">
+          All user inquiries and contact messages
+        </p>
+      </div>
+
+      {/* ================= CONTENT ================= */}
+      {isLoading ? (
+        <div className="flex justify-center py-20">
           <span className="loading loading-spinner text-secondary"></span>
         </div>
-      ) : messages.length === 0 ? (
-        <p className="text-center text-accent">No messages found.</p>
+      ) : isError ? (
+        <p className="text-center text-error py-10">Failed to load messages.</p>
+      ) : isEmpty ? (
+        <p className="text-center text-base-content/60 py-10">
+          No messages found.
+        </p>
       ) : (
-        <div className="space-y-6">
-          {messages.map(({ _id, name, email, message, created_at }) => (
+        <div className="space-y-4">
+          {messages.map((msg) => (
             <div
-              key={_id}
-              className="p-6 bg-base-100 rounded-lg shadow-md border border-base-300"
+              key={msg._id}
+              className="bg-base-100 border border-base-300 rounded-xl p-5 hover:shadow-md transition"
             >
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="font-semibold text-lg text-accent">{name}</h3>
+              {/* ================= TOP ROW ================= */}
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3">
+                {/* NAME */}
+                <h3 className="font-semibold text-base-content text-lg">
+                  {msg.name}
+                </h3>
+
+                {/* DATE */}
                 <time
-                  dateTime={created_at}
-                  className="text-sm text-text-accent"
-                  title={new Date(created_at).toLocaleString()}
+                  dateTime={msg.created_at}
+                  className="text-xs text-base-content/60"
+                  title={new Date(msg.created_at).toLocaleString()}
                 >
-                  {new Date(created_at).toLocaleDateString()}
+                  {msg.created_at
+                    ? new Date(msg.created_at).toLocaleDateString()
+                    : "Unknown date"}
                 </time>
               </div>
-              <p className="mb-6 text-text-accent italic">{email}</p>
-              <p className="text-base whitespace-pre-wrap">{message}</p>
+
+              {/* ================= EMAIL ================= */}
+              <p className="text-sm text-primary mb-3">{msg.email}</p>
+
+              {/* ================= MESSAGE ================= */}
+              <div className="text-sm text-base-content/80 leading-relaxed whitespace-pre-wrap">
+                {msg.message}
+              </div>
             </div>
           ))}
         </div>
