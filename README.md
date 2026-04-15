@@ -1,22 +1,18 @@
-```
 # 🚀 CraftFlow – Employee Management System
-```
+---
 
-```
 ## 🚀 Project Description
 **CraftFlow** is a full-stack role-based employee management system that allows employees to log work hours, HRs to manage and verify users and initiate payrolls, and Admins to approve salary payments via Stripe. The app supports secure authentication with Firebase, protected routes with JWT, and real-time dashboard updates.
-```
+---
 
-```
 **Live Site URL:**  
 🌐 [https://craft-flow.netlify.app/](https://craft-flow.netlify.app/)
-```
+---
 
-```
 ## 🔐 Admin Login Credentials
 Email: admin@gmail.com  
 Password: A1234@
-```
+---
 
 ```
 ## 🔥 Key Features
