@@ -133,6 +133,12 @@ Built with:
 
 ---
 
+## 🌐 Live Project
+
+👉 [Live](https://craft-flow.netlify.app/)
+
+---
+
 ## 🚀 Getting Started
 
 ### 1. Clone the Repository
@@ -160,12 +166,6 @@ npm run dev
 
 ---
 
-## 🌐 Live Project
-
-👉 [Live](https://craft-flow.netlify.app/)
-
----
-
 ## 🔗 Related Repository
 
 - Frontend: [CraftFlow Client](https://github.com/md-shafiqul-islam/CraftFlow-Client)
@@ -177,7 +177,7 @@ npm run dev
 
 Md. Shafiqul Islam
 
-- [Porfolio](shafiqul-islam.netlify.app)
+- [Porfolio](https://shafiqul-islam.netlify.app/)
 - [LinkedIn](https://www.linkedin.com/in/mdshafiqulislam1/)
 - [GitHub](https://github.com/md-shafiqul-islam)
 
