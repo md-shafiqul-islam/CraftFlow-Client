@@ -1,138 +1,139 @@
-# 🚀 CraftFlow – Employee Management System
+# CraftFlow — Employee Management System
 
-A full-stack role-based employee management platform that streamlines task tracking, employee verification, payroll handling, and secure payments.
+A full-stack, role-based employee management system for tracking daily work,
+employee verification, payroll workflows, and salary payments.
 
----
-
-## 🌐 Live Demo
-👉 https://craft-flow.netlify.app/
-
----
-
-## 🧾 Project Overview
-
-**CraftFlow** is a role-based workforce management system where:
-
-- 👨‍💻 Employees log daily work and track productivity  
-- 🧑‍💼 HR verifies employees, manages records, and initiates payroll  
-- 🧑‍💻 Admin approves payments and manages roles securely  
-
-It includes secure authentication, protected APIs, and real-time dashboard updates.
+<p>
+  <a href="https://craft-flow.netlify.app/">
+    <img src="https://img.shields.io/badge/Live%20Demo-Visit-success?style=for-the-badge" alt="CraftFlow Live Demo" />
+  </a>
+  <a href="https://github.com/md-shafiqul-islam/CraftFlow-Server">
+    <img src="https://img.shields.io/badge/Backend-Repository-black?style=for-the-badge&logo=github" alt="CraftFlow Server Repository" />
+  </a>
+</p>
 
 ---
 
-## 🔐 Demo Credentials (Admin)
+## 📋 Project Overview
 
-Email: admin@gmail.com  
-Password: A1234@
+CraftFlow is a role-based workforce management application with dedicated
+dashboards for Employees, HR, and Admin users.
+
+- 👨‍💻 **Employees** can log daily work and track their work history.
+- 🧑‍💼 **HR** can verify employees, manage work records, and initiate payroll.
+- 🧑‍💻 **Admins** can manage roles, approve salary payments, and control user access.
+
+The application includes authentication, role-based access control, protected
+operations, dashboard analytics, and Stripe payment integration.
 
 ---
 
 ## ✨ Key Features
 
-### 🔑 Authentication & Authorization
-- Email/password + Google login support
-- Role selection during registration (Employee / HR)
+### 🔐 Authentication & Access Control
+
+- Email/password and Google authentication
 - Firebase Authentication integration
+- Role-based access control for Employee, HR, and Admin users
+- Protected routes and secure API access
+- Automatic unauthorized handling
 
----
+### 👨‍💻 Employee Dashboard
 
-### 🛡️ Secure Access Control
-- JWT-protected backend APIs
-- Role-based permissions (Employee / HR / Admin)
-- Firebase Admin SDK verification middleware
-- Auto logout on token expiration
-
----
-
-### 📝 Employee Features
-- Log daily tasks (task name, hours, date)
-- Edit or delete submitted tasks
+- Log daily tasks and working hours
+- Edit or delete submitted work records
 - Track personal work history
 
----
+### 🧑‍💼 HR Dashboard
 
-### 🧑‍💼 HR Features
-- View all employees
+- View and manage employee records
 - Verify employee accounts
 - Filter work records by employee and month
 - Calculate monthly work hours
-- Initiate salary/payment requests
+- Initiate salary and payment requests
 
----
+### 🧑‍💻 Admin Dashboard
 
-### 💸 Admin Features
-- Approve salary requests via Stripe
-- Prevent duplicate monthly payments
+- Manage employee roles
 - Promote employees to HR
-- Fire or disable users (soft block login access)
-
----
+- Approve salary requests
+- Process payments through Stripe
+- Prevent duplicate monthly payments
+- Disable user access when required
 
 ### 📊 Dashboard & Analytics
-- Work logs visualization using Recharts
-- Salary/payment tracking dashboard
-- Real-time updates for system activities
 
----
+- Work activity visualization with Recharts
+- Salary and payment tracking
+- Dynamic updates for application activities
 
-### 🖼️ Media Handling
-- Profile image upload via ImgBB
-- Secure image storage and retrieval
+### 🎨 User Experience
 
----
-
-### 🎨 UI/UX
-- TailwindCSS + DaisyUI responsive UI
+- Responsive interface built with Tailwind CSS and DaisyUI
+- Form handling and validation
 - SweetAlert2 notifications
 - Lottie animations
-- Clean dashboard experience
+- Profile image upload with ImgBB
 
 ---
 
-## 🧰 Tech Stack
+## 🛠️ Tech Stack
 
 ### Frontend
+
 - React 19
 - React Router 7
-- React Hook Form + Yup
-- Firebase Authentication
+- JavaScript
 - TanStack React Query
-- Axios (interceptors)
-- TailwindCSS + DaisyUI
+- Axios
+- React Hook Form
+- Yup
+- Firebase Authentication
+- Tailwind CSS
+- DaisyUI
 - Recharts
-- Lottie
 - SweetAlert2
-- Hosted on Firebase
-
----
+- Lottie
 
 ### Backend
-- Node.js + Express.js
-- MongoDB (Atlas)
+
+The backend repository is available here:
+
+👉 [CraftFlow Server](https://github.com/md-shafiqul-islam/CraftFlow-Server)
+
+Built with:
+
+- Node.js
+- Express.js
+- MongoDB
 - Firebase Admin SDK
 - JWT Authentication
-- Stripe Payment Integration
-- CORS + dotenv
-- Hosted on Vercel
+- Stripe
+- REST APIs
 
 ---
 
 ## 🛡️ Security
 
 - Firebase ID token verification
-- JWT-based route protection
-- Role-based access control
-- Axios interceptor for auth headers
-- Automatic unauthorized handling
+- JWT-based API protection
+- Role-based authorization
+- Protected routes
+- Axios interceptors for authenticated requests
+- Unauthorized request handling
 
 ---
 
-# Feel free to fork, clone, or contribute!
+## 🔐 Demo Credentials
+
+### Admin Account
+
+**Email:** admin@gmail.com  
+**Password:** A1234@
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
 ### 1. Clone the Repository
 
@@ -140,20 +141,44 @@ Password: A1234@
 git clone https://github.com/md-shafiqul-islam/CraftFlow-Client
 ```
 
-### 2. Install Dependencies
+### 2. Navigate to the Project
+```bash
+cd CraftFlow-Client
+```
+
+### 3. Install Dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Start the Server
+### 4. Start the Development Server
 
 ```bash
 npm run dev
 ```
 
+---
+
+## 🌐 Live Project
+
+👉 [Live](https://craft-flow.netlify.app/)
+
+---
+
+## 🔗 Related Repository
+
+- Frontend: [CraftFlow Client](https://github.com/md-shafiqul-islam/CraftFlow-Client)
+- Backend: [CraftFlow Server](https://github.com/md-shafiqul-islam/CraftFlow-Server)
+
+---
+
 ### 👨‍💻 Author
 
-Developed by Md. Shafiqul Islam
+Md. Shafiqul Islam
+
+Portfolio: [Porfolio](shafiqul-islam.netlify.app)
+LinkedIn: [LinkedIn](https://www.linkedin.com/in/mdshafiqulislam1/)
+GitHub: [GitHub](https://github.com/md-shafiqul-islam)
 
 ---
