@@ -177,8 +177,8 @@ npm run dev
 
 Md. Shafiqul Islam
 
-Portfolio: [Porfolio](shafiqul-islam.netlify.app)
-LinkedIn: [LinkedIn](https://www.linkedin.com/in/mdshafiqulislam1/)
-GitHub: [GitHub](https://github.com/md-shafiqul-islam)
+- [Porfolio](shafiqul-islam.netlify.app)
+- [LinkedIn](https://www.linkedin.com/in/mdshafiqulislam1/)
+- [GitHub](https://github.com/md-shafiqul-islam)
 
 ---
