@@ -168,7 +168,6 @@ npm run dev
 
 ## 🔗 Related Repository
 
-- Frontend: [CraftFlow Client](https://github.com/md-shafiqul-islam/CraftFlow-Client)
 - Backend: [CraftFlow Server](https://github.com/md-shafiqul-islam/CraftFlow-Server)
 
 ---
@@ -176,6 +175,8 @@ npm run dev
 ### 👨‍💻 Author
 
 Md. Shafiqul Islam
+
+Software Engineer | Full-Stack Developer
 
 - [Porfolio](https://shafiqul-islam.netlify.app/)
 - [LinkedIn](https://www.linkedin.com/in/mdshafiqulislam1/)
